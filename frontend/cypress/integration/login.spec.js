@@ -4,8 +4,8 @@ describe('Login page', () => {
 	});
 
 	it('should redirect to homepage on successful login', () => {
-        cy.get('[data-cy=username]').type('username');
-        cy.get('[data-cy=password]').type('password');
+        cy.get('[data-cy=username]').type('user');
+        cy.get('[data-cy=password]').type('pass');
         cy.get('[data-cy=submit]').click();
 
 		cy.location().should((loc) => {
@@ -14,8 +14,7 @@ describe('Login page', () => {
 	});
 
 	it('should show an error if there is invalid input', () => {
-        cy.get('[data-cy=username]').type(123);
-        cy.get('[data-cy=password]').type('password');
+        cy.get('[data-cy=password]').type('pass');
         cy.get('[data-cy=submit]').click();
 
 		cy.url().should('include', 'login');
@@ -23,8 +22,8 @@ describe('Login page', () => {
 	});
 
 	it('should show an error if the username does not exist', () => {
-        cy.get('[data-cy=username]').type('badusername');
-        cy.get('[data-cy=password]').type('password');
+        cy.get('[data-cy=username]').type('baduser');
+        cy.get('[data-cy=password]').type('pass');
         cy.get('[data-cy=submit]').click();
 
 		cy.url().should('include', 'login');
@@ -32,8 +31,8 @@ describe('Login page', () => {
 	});
 
 	it('should show an error if the password does not match', () => {
-        cy.get('[data-cy=username]').type('username');
-        cy.get('[data-cy=password]').type('badpassword');
+        cy.get('[data-cy=username]').type('user');
+        cy.get('[data-cy=password]').type('badpass');
         cy.get('[data-cy=submit]').click();
 
 		cy.url().should('include', 'login');
