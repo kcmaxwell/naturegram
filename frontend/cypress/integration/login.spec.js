@@ -1,0 +1,42 @@
+describe('Login page', () => {
+	beforeEach(() => {
+		cy.visit('/login');
+	});
+
+	it('should redirect to homepage on successful login', () => {
+        cy.get('[data-cy=username]').type('username');
+        cy.get('[data-cy=password]').type('password');
+        cy.get('[data-cy=submit]').click();
+
+		cy.location().should((loc) => {
+            expect(loc.pathname).to.eq('/');
+        });
+	});
+
+	it('should show an error if there is invalid input', () => {
+        cy.get('[data-cy=username]').type(123);
+        cy.get('[data-cy=password]').type('password');
+        cy.get('[data-cy=submit]').click();
+
+		cy.url().should('include', 'login');
+		cy.get('[data-cy=error]').should('be.visible');
+	});
+
+	it('should show an error if the username does not exist', () => {
+        cy.get('[data-cy=username]').type('badusername');
+        cy.get('[data-cy=password]').type('password');
+        cy.get('[data-cy=submit]').click();
+
+		cy.url().should('include', 'login');
+		cy.get('[data-cy=error]').should('be.visible');
+	});
+
+	it('should show an error if the password does not match', () => {
+        cy.get('[data-cy=username]').type('username');
+        cy.get('[data-cy=password]').type('badpassword');
+        cy.get('[data-cy=submit]').click();
+
+		cy.url().should('include', 'login');
+		cy.get('[data-cy=error]').should('be.visible');
+	});
+});
