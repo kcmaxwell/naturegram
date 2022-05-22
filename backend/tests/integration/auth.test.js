@@ -18,8 +18,9 @@ describe('Authentication', () => {
     
     beforeAll(async () => {
         await mongoose.disconnect();
-    //    mongoServer = await MongoMemoryServer.create();
-        await mongoose.connect(process.env.MONGODB_TEST, { dbName: 'authTest' })
+        mongoServer = await MongoMemoryServer.create();
+        //await mongoose.connect(process.env.MONGODB_TEST, { dbName: 'authTest' })
+        await mongoose.connect(mongoServer.getUri(), { dbName: 'authTest'})
     })
 
     beforeEach(async() => {
@@ -33,7 +34,7 @@ describe('Authentication', () => {
 
     afterAll(async () => {
         await mongoose.disconnect();
-		//await mongoServer.stop();
+		await mongoServer.stop();
     });
 
     describe('POST login', () => {
