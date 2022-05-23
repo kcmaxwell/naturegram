@@ -102,16 +102,26 @@ exports.signup = async function (req, res, next) {
 }
 
 exports.logout = async function (req, res, next) {
-    const { signedCookies = {} } = req;
-  const { refreshToken } = signedCookies;
+  const { signedCookies = {} } = req;
+  const {refreshToken} = signedCookies;
+  if (!refreshToken) {
+    res.sendStatus(500);
+    return;
+  }
+
   User.findById(req.user._id).then(
-    (user) => {
+    async (user) => {
+      if (!user) {
+        res.sendStatus(500);
+        return;
+      }
+
       const tokenIndex = user.refreshToken.findIndex(
         (item) => item.refreshToken === refreshToken
       );
 
       if (tokenIndex !== -1) {
-        user.refreshToken.id(user.refreshToken[tokenIndex]._id).remove();
+        await user.refreshToken.id(user.refreshToken[tokenIndex]._id).remove();
       }
 
       user.save((err, user) => {
@@ -120,6 +130,7 @@ exports.logout = async function (req, res, next) {
           res.send(err);
         } else {
           res.clearCookie("refreshToken", COOKIE_OPTIONS);
+          res.clearCookie('session-id', COOKIE_OPTIONS);
           res.send({ success: true });
         }
       });

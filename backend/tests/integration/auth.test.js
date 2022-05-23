@@ -104,4 +104,36 @@ describe('Authentication', () => {
                 .expect(400);
         });
     });
+
+    describe('POST logout', () => {
+        it('should return 200 OK if logged in', async () => {
+            await request(app)
+                .post('/auth/signup')
+                .send(signupUser)
+                .expect(201);
+
+            const response = await request(app)
+                .post('/auth/login')
+                .send(loginUser);
+
+            expect(response.status).toBe(200);
+
+            const { header } = response;
+            await request(app)
+                .post('/auth/logout')
+                .set({
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${response.body.token}`,
+                })
+                .set('Cookie', [...header['set-cookie']])
+                .expect(200);
+        });
+
+        it('should return 401 Unauthorized if not logged in', async () => {
+            await request(app)
+                .post('/auth/logout')
+                .expect(401);
+        });
+
+    })
 })
