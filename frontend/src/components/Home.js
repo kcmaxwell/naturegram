@@ -5,31 +5,6 @@ export default function Home() {
     const [userContext, setUserContext] = useContext(UserContext);
     const [error, setError] = useState('');
 
-    const verifyUser = useCallback(() => {
-        fetch(process.env.REACT_APP_BACKEND + "/auth/refreshToken", {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-        }).then(async (response) => {
-          if (response.ok) {
-            const data = await response.json();
-            setUserContext((oldValues) => {
-              return { ...oldValues, token: data.token };
-            });
-          } else {
-            setUserContext((oldValues) => {
-              return { ...oldValues, token: null };
-            });
-          }
-          // call refreshToken every 5 minutes to renew the authentication token.
-          setTimeout(verifyUser, 5 * 60 * 1000);
-        });
-      }, [setUserContext]);
-    
-      useEffect(() => {
-        verifyUser();
-      }, [verifyUser]);
-
     const logout = () => {
         setError('');
 
