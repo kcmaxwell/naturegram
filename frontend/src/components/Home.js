@@ -29,9 +29,29 @@ export default function Home() {
         verifyUser();
       }, [verifyUser]);
 
+    const logout = () => {
+        fetch(process.env.REACT_APP_API_ENDPOINT + "users/logout", {
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userContext.token}`,
+            },
+          }).then(async (response) => {
+            setUserContext((oldValues) => {
+              return { ...oldValues, details: undefined, token: null };
+            });
+            window.localStorage.setItem("logout", Date.now());
+          });
+    }
+
     return userContext.token === null ? (
         <h1>Please login first.</h1>
-    ) : (
+    ) : userContext.token ? (
+        <>
         <h1>Welcome to Naturegram!</h1>
+        <button cy-data='logout' onClick={logout}>Logout</button>
+        </>
+    ) : (
+        <></>
     )
 }
