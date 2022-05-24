@@ -38,6 +38,7 @@
     ]
   },
   "devDependencies": {
-    "cypress": "^9.6.1"
+    "cypress": "^9.6.1",
+    "cypress-dotenv": "^2.0.0"
   }
 }

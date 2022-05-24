@@ -1,7 +1,9 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
+    const navigate = useNavigate();
     const [userContext, setUserContext] = useContext(UserContext);
     const [error, setError] = useState('');
 
@@ -18,7 +20,7 @@ export default function Home() {
           }).then(async (response) => {
             if (response.ok) {
               setUserContext((oldValues) => {
-                return { ...oldValues, token: null };
+                return { ...oldValues, details: null, token: null };
               });
               window.localStorage.setItem("logout", Date.now());
             } else {
@@ -36,7 +38,8 @@ export default function Home() {
         <>
         {error && <h1>{error}</h1>}
         <h1>Welcome to Naturegram!</h1>
-        <button cy-data='logout' onClick={logout}>Logout</button>
+        <button data-cy='profile'>Profile</button>
+        <button data-cy='logout' onClick={logout}>Logout</button>
         </>
     ) : (
         <></>
