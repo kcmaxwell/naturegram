@@ -32,7 +32,7 @@ const AuthWrapper = () => {
 	}, [verifyUser]);
 
 	const fetchUserDetails = useCallback(() => {
-		fetch(process.env.REACT_APP_BACKEND + '/auth/info', {
+		fetch(process.env.REACT_APP_BACKEND + '/auth/userInfo', {
 			method: 'GET',
 			credentials: 'include',
 			headers: {
@@ -58,11 +58,11 @@ const AuthWrapper = () => {
 		});
 	}, [setUserContext, userContext.token]);
 
-	useEffect(() => {
-		if (!userContext.details) {
-			fetchUserDetails();
-		}
-	}, [userContext.details, fetchUserDetails]);
+	// useEffect(() => {
+	// 	if (!userContext.details) {
+	// 		fetchUserDetails();
+	// 	}
+	// }, [userContext.details, fetchUserDetails]);
 
 	return userContext.token === null ? (
 		<Navigate to="/login" replace state={{ from: location }} />
