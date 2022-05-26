@@ -14,7 +14,6 @@ require('./strategies/LocalStrategy');
 require('./authenticate');
 
 const indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 const { COOKIE_OPTIONS } = require('./authenticate');
 
 var app = express();
@@ -53,6 +52,5 @@ app.use(session({
 app.use(passport.initialize());
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 module.exports = app;

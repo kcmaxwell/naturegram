@@ -14,6 +14,7 @@ const UserSchema = new Schema({
     fullName: { type: String, required: true },
     profilePicUrl: { type: String },
     posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+    savedPosts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
     followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     refreshToken: {
