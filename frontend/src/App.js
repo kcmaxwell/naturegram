@@ -8,6 +8,7 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import AuthWrapper from './components/AuthWrapper';
 import Profile from './components/Profile';
+import HTTP404 from './components/HTTP404';
 
 function App() {
   const [userContext, setUserContext] = useContext(UserContext);
@@ -20,10 +21,11 @@ function App() {
         <Routes>
           <Route element={<AuthWrapper />}>
             <Route path='/' element={<Home />} />
-            <Route path='/:username' element={<Profile />} />
+            <Route path='/user/:username' element={<Profile />} />
             </Route>
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
+          <Route path='/:notFound' element={<HTTP404 />} />
         </Routes>
       </BrowserRouter>
     </div>

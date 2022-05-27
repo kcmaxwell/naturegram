@@ -73,7 +73,7 @@ export default function Home() {
         {error && <h1>{error}</h1>}
         <h1>Welcome to Naturegram!</h1>
         <h2>{userContext.details.username}</h2>
-        <button data-cy='profile'>Profile</button>
+        <a href={'/user/' + userContext.details.username}><button data-cy='profile'>Profile</button></a>
         <button data-cy='logout' onClick={logout}>Logout</button>
         </>
     ) : (

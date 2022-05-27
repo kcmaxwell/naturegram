@@ -100,8 +100,6 @@ describe('Users', () => {
         })
 
         it('should update both user\'s lists and return 200 OK', async () => {
-            
-
             const { header } = response;
 
             await request(app)
@@ -133,6 +131,30 @@ describe('Users', () => {
                 .set('Cookie', [...header['set-cookie']])
                 .send({username: 'notAUser'})
                 .expect(404);
-        })
+        });
+
+        it('should return 409 Conflict if the user already follows the other user', async () => {
+            const { header } = response;
+
+            await request(app)
+                .put('/users/follow')
+                .set({
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${response.body.token}`,
+                })
+                .set('Cookie', [...header['set-cookie']])
+                .send({username: secondUser.username})
+                .expect(200);
+
+                await request(app)
+                .put('/users/follow')
+                .set({
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${response.body.token}`,
+                })
+                .set('Cookie', [...header['set-cookie']])
+                .send({username: secondUser.username})
+                .expect(409);
+        });
     });
 })
