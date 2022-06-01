@@ -3,9 +3,11 @@ var router = express.Router();
 
 const authRouter = require('./auth')
 const usersRouter = require('./users');
+const postsRouter = require('./posts');
 
 router.use('/auth', authRouter);
 router.use('/users', usersRouter);
+router.use('/posts', postsRouter);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
