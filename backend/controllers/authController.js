@@ -6,6 +6,7 @@ const {
 	getRefreshToken,
 } = require('../authenticate');
 const { check, validationResult } = require('express-validator');
+const aws = require('aws-sdk');
 
 const User = require('../models/user');
 
@@ -202,3 +203,31 @@ exports.refreshToken = async function (req, res, next) {
 exports.userInfo = async function (req, res, next) {
   res.send(req.user);
 };
+
+exports.signS3 = async function (req, res, next) {
+	const s3 = new aws.S3();
+	//const fileName = req.body.fileName;
+	const fileType = req.query.fileType;
+	const fileKey = req.user.username + '_' + Date.now() + '.' + req.query.fileExt;
+	const s3Params = {
+		Bucket: process.env.S3_BUCKET,
+		//Key: fileName,
+		Key: fileKey,
+		Expires: 60,
+		ContentType: fileType,
+		ACL: 'public-read',
+	};
+
+	s3.getSignedUrl('putObject', s3Params, (err, data) => {
+		if (err) {
+			throw err;
+		}
+
+		const returnData = {
+			signedRequest: data,
+			url: `https://${process.env.S3_BUCKET}.s3.amazonaws.com/${fileKey}`
+		};
+
+		res.send(JSON.stringify(returnData));
+	});
+}

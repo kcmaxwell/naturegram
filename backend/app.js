@@ -3,9 +3,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const bodyParser = require('body-parser');
-const session = require('express-session')
+const session = require('express-session');
 const passport = require('passport');
-const cors = require('cors')
+const cors = require('cors');
+const aws = require('aws-sdk');
 
 require('dotenv').config();
 require('./utils/connectdb');
@@ -15,6 +16,8 @@ require('./authenticate');
 
 const indexRouter = require('./routes/index');
 const { COOKIE_OPTIONS } = require('./authenticate');
+
+aws.config.region = 'us-east-1'
 
 var app = express();
 
@@ -42,13 +45,15 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.use(session({
-    name: 'session-id',
-    secret: process.env.SESSION_SECRET,
-    saveUninitialized: false,
-    resave: false,
-    cookie: COOKIE_OPTIONS,
-  }));
+app.use(
+	session({
+		name: 'session-id',
+		secret: process.env.SESSION_SECRET,
+		saveUninitialized: false,
+		resave: false,
+		cookie: COOKIE_OPTIONS,
+	})
+);
 
 app.use(passport.initialize());
 

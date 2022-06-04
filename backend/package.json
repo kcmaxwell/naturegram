@@ -6,9 +6,10 @@
     "start": "node ./bin/www",
     "server": "nodemon npm start",
     "test-server": "NODE_ENV=test npm run server",
-    "test": "jest --watchAll --verbose"
+    "test": "NODE_ENV=jest jest --watchAll --verbose"
   },
   "dependencies": {
+    "aws-sdk": "^2.1146.0",
     "body-parser": "^1.20.0",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",

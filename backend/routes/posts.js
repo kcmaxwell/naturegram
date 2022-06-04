@@ -6,4 +6,6 @@ const postsController = require('../controllers/postsController');
 
 router.get('/:postId', verifyUser, postsController.getPost);
 
+router.post('/createPost', verifyUser, postsController.createPost);
+
 module.exports = router;

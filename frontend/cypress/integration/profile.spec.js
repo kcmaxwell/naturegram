@@ -8,7 +8,7 @@ describe('Profile page', () => {
     });
 
     it('should be possible to follow a user from their profile', () => {
-        cy.visit('/otherUser');
+        cy.visit('/user/otherUser');
         cy.get('[data-cy=follow]').click();
         cy.visit('/user');
         cy.get('[data-cy=following]').click();
@@ -17,18 +17,18 @@ describe('Profile page', () => {
     });
 
     it('should be possible to edit a user\'s own profile', () => {
-        cy.visit('/user');
+        cy.visit('/user/user');
         cy.get('[data-cy=edit]').click();
 
         cy.url().should('include', 'edit');
         cy.get('[data-cy=newName]').type('New Name');
 
-        cy.visit('/user');
+        cy.visit('/user/user');
         cy.contains('New User').should('be.visible');
     });
 
     it('should be possible to visit a follower', () => {
-        cy.visit('/user');
+        cy.visit('/user/user');
         cy.get('[data-cy=followersList]').click();
         cy.contains('follower').click();
 
@@ -36,7 +36,7 @@ describe('Profile page', () => {
     });
 
     it('should be possible to visit a user you are following', () => {
-        cy.visit('/user');
+        cy.visit('/user/user');
         cy.get('[data-cy=followingList]').click();
         cy.contains('following').click();
 
@@ -44,13 +44,13 @@ describe('Profile page', () => {
     });
 
     it('should be able to see a user\'s posts', () => {
-        cy.visit('/otherUser');
+        cy.visit('/user/otherUser');
         cy.get('[data-cy=posts]').click();
         cy.get('[data-cy=post]').should('be.visible');
     });
 
     it('should be able to see your own saved posts, not other users', () => {
-        cy.visit('/user');
+        cy.visit('/user/user');
         cy.get('[data-cy=savedPosts]').click();
         cy.get('[data-cy=savedPost]').should('be.visible');
     });

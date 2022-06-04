@@ -9,6 +9,9 @@ import Signup from './components/Signup';
 import AuthWrapper from './components/AuthWrapper';
 import Profile from './components/Profile';
 import HTTP404 from './components/HTTP404';
+import S3Test from './components/S3Test';
+import Upload from './components/Upload';
+import Post from './components/Post';
 
 function App() {
   const [userContext, setUserContext] = useContext(UserContext);
@@ -22,7 +25,10 @@ function App() {
           <Route element={<AuthWrapper />}>
             <Route path='/' element={<Home />} />
             <Route path='/user/:username' element={<Profile />} />
-            </Route>
+            <Route path='/post/:postId' element={<Post />} />
+            <Route path='/upload' element={<Upload />} />
+            <Route path='/s3Test' element={<S3Test />} />
+          </Route>
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
           <Route path='/:notFound' element={<HTTP404 />} />

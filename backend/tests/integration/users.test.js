@@ -6,6 +6,7 @@ const User = require('../../models/user');
 
 describe('Users', () => {
     let mongoServer;
+    let loginResponse;
     const signupUser = {
         username: 'username',
         password: 'password',
@@ -22,67 +23,8 @@ describe('Users', () => {
         mongoServer = await MongoMemoryServer.create();
         //await mongoose.connect(process.env.MONGODB_TEST, { dbName: 'authTest' })
         await mongoose.connect(mongoServer.getUri(), { dbName: 'authTest'})
-    })
 
-    beforeEach(async() => {
-        await User.deleteMany();
-        // const collections = await mongoose.connection.db.collections();
-
-		// for (let collection of collections) {
-		// 	await collection.deleteMany();
-		// }
-    });
-
-    afterAll(async () => {
-        await mongoose.disconnect();
-		await mongoServer.stop();
-    });
-
-    describe('GET user', () => {
-        let response;
-        beforeEach(async () => {
-            await request(app)
-                .post('/auth/signup')
-                .send(signupUser)
-                .expect(201);
-
-            response = await request(app)
-                .post('/auth/login')
-                .send(signupUser);
-                expect(response.status).toBe(200);
-        });
-
-        it('should return the requested user with a 200 OK', async () => {
-            const { header } = response;
-
-            await request(app)
-                .get('/users/username')
-                .set({
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${response.body.token}`,
-                })
-                .set('Cookie', [...header['set-cookie']])
-                .expect(200);
-        })
-
-        it('should return 404 Not Found if the user does not exist', async () => {
-            const { header } = response;
-
-            await request(app)
-                .get('/users/notAUser')
-                .set({
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${response.body.token}`,
-                })
-                .set('Cookie', [...header['set-cookie']])
-                .expect(404);
-        })
-    });
-
-    describe('PUT follow', () => {
-        let response;
-        beforeEach(async () => {
-            await request(app)
+        await request(app)
             .post('/auth/signup')
             .send(signupUser)
             .expect(201);
@@ -92,21 +34,69 @@ describe('Users', () => {
             .send(secondUser)
             .expect(201);
 
-            response = await request(app)
+            loginResponse = await request(app)
                 .post('/auth/login')
                 .send(signupUser);
 
-                expect(response.status).toBe(200);
+            expect(loginResponse.status).toBe(200);
+    })
+
+    // beforeEach(async() => {
+    //     await User.deleteMany();
+    //     // const collections = await mongoose.connection.db.collections();
+
+	// 	// for (let collection of collections) {
+	// 	// 	await collection.deleteMany();
+	// 	// }
+    // });
+
+    afterAll(async () => {
+        await mongoose.disconnect();
+		await mongoServer.stop();
+    });
+
+    describe('GET user', () => {
+        it('should return the requested user with a 200 OK', async () => {
+            const { header } = loginResponse;
+
+            await request(app)
+                .get('/users/username')
+                .set({
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${loginResponse.body.token}`,
+                })
+                .set('Cookie', [...header['set-cookie']])
+                .expect(200);
+        })
+
+        it('should return 404 Not Found if the user does not exist', async () => {
+            const { header } = loginResponse;
+
+            await request(app)
+                .get('/users/notAUser')
+                .set({
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${loginResponse.body.token}`,
+                })
+                .set('Cookie', [...header['set-cookie']])
+                .expect(404);
+        })
+    });
+
+    describe('PUT follow', () => {
+        beforeEach(async () => {
+            await User.findOneAndUpdate(signupUser, {followers: [], following: []});
+            await User.findOneAndUpdate(secondUser, {followers: [], following: []});
         })
 
         it('should update both user\'s lists and return 200 OK', async () => {
-            const { header } = response;
+            const { header } = loginResponse;
 
             await request(app)
                 .put('/users/follow')
                 .set({
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${response.body.token}`,
+                    Authorization: `Bearer ${loginResponse.body.token}`,
                 })
                 .set('Cookie', [...header['set-cookie']])
                 .send({username: secondUser.username})
@@ -120,13 +110,13 @@ describe('Users', () => {
         });
 
         it('should return 404 Not Found if the user to follow does not exist', async () => {
-            const { header } = response;
+            const { header } = loginResponse;
 
             await request(app)
                 .put('/users/follow')
                 .set({
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${response.body.token}`,
+                    Authorization: `Bearer ${loginResponse.body.token}`,
                 })
                 .set('Cookie', [...header['set-cookie']])
                 .send({username: 'notAUser'})
@@ -134,13 +124,13 @@ describe('Users', () => {
         });
 
         it('should return 409 Conflict if the user already follows the other user', async () => {
-            const { header } = response;
+            const { header } = loginResponse;
 
             await request(app)
                 .put('/users/follow')
                 .set({
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${response.body.token}`,
+                    Authorization: `Bearer ${loginResponse.body.token}`,
                 })
                 .set('Cookie', [...header['set-cookie']])
                 .send({username: secondUser.username})
@@ -150,7 +140,7 @@ describe('Users', () => {
                 .put('/users/follow')
                 .set({
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${response.body.token}`,
+                    Authorization: `Bearer ${loginResponse.body.token}`,
                 })
                 .set('Cookie', [...header['set-cookie']])
                 .send({username: secondUser.username})

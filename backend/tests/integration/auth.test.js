@@ -6,6 +6,7 @@ const User = require('../../models/user');
 
 describe('Authentication', () => {
     let mongoServer;
+    let loginResponse;
     const loginUser = {
         username: 'username',
         password: 'password',
@@ -21,6 +22,17 @@ describe('Authentication', () => {
         mongoServer = await MongoMemoryServer.create();
         //await mongoose.connect(process.env.MONGODB_TEST, { dbName: 'authTest' })
         await mongoose.connect(mongoServer.getUri(), { dbName: 'authTest'})
+
+        // await request(app)
+        //     .post('/auth/signup')
+        //     .send(signupUser)
+        //     .expect(201);
+
+        // loginResponse = await request(app)
+        //     .post('/auth/login')
+        //     .send(signupUser);
+
+        // expect(loginResponse.status).toBe(200);
     })
 
     beforeEach(async() => {
@@ -106,12 +118,14 @@ describe('Authentication', () => {
     });
 
     describe('POST logout', () => {
-        it('should return 200 OK if logged in', async () => {
+        beforeEach(async () => {
             await request(app)
                 .post('/auth/signup')
                 .send(signupUser)
                 .expect(201);
+        });
 
+        it('should return 200 OK if logged in', async () => {
             const response = await request(app)
                 .post('/auth/login')
                 .send(loginUser);
@@ -136,4 +150,12 @@ describe('Authentication', () => {
         });
 
     })
+
+    describe('GET user info', () => {
+
+    });
+
+    describe('GET signed S3 url', () => {
+        
+    });
 })
