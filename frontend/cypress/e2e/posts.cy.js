@@ -4,7 +4,9 @@ describe('Post page', () => {
     const unlikePost = 1234;
 
     beforeEach(() => {
-        cy.request('POST', Cypress.env('BACKEND') + '/auth/login', 
+        cy.task('db:seed');
+
+        cy.request('POST', Cypress.env('backend') + '/auth/login', 
             {username: 'user', password: 'pass'})
             .then(res => {
                 expect(res.status).to.eq(200);

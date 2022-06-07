@@ -1,0 +1,115 @@
+[{
+  "_id": {
+    "$oid": "629be2142eb6b3803774302f"
+  },
+  "author": {
+    "$oid": "629038a4678b27fc4f35f0b4"
+  },
+  "description": "User's dog picture",
+  "imageUrl": "https://naturegram-heroku-kcmaxwell.s3.amazonaws.com/user_1654383123810.jpg",
+  "timestamp": {
+    "$date": {
+      "$numberLong": "1654383124881"
+    }
+  },
+  "comments": [],
+  "likes": [],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "629be25c2eb6b38037743049"
+  },
+  "author": {
+    "$oid": "629038c1678b27fc4f35f0c2"
+  },
+  "description": "User2's picture",
+  "imageUrl": "https://naturegram-heroku-kcmaxwell.s3.amazonaws.com/user2_1654383195838.jpg",
+  "timestamp": {
+    "$date": {
+      "$numberLong": "1654383196869"
+    }
+  },
+  "comments": [],
+  "likes": [],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "629bf2cf2eb6b38037743074"
+  },
+  "author": {
+    "$oid": "629038a4678b27fc4f35f0b4"
+  },
+  "description": "User's second picture",
+  "imageUrl": "https://naturegram-heroku-kcmaxwell.s3.amazonaws.com/user_1654387406004.jpg",
+  "timestamp": {
+    "$date": {
+      "$numberLong": "1654387407227"
+    }
+  },
+  "comments": [],
+  "likes": [],
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "629bf59782603604f01d7cdb"
+  },
+  "author": {
+    "$oid": "629038a4678b27fc4f35f0b4"
+  },
+  "description": "Nanoid test",
+  "imageUrl": "https://naturegram-heroku-kcmaxwell.s3.amazonaws.com/user_1654388118392.jpg",
+  "timestamp": {
+    "$date": {
+      "$numberLong": "1654388119949"
+    }
+  },
+  "comments": [],
+  "likes": [],
+  "nanoid": "apT4RSjq7YFLr4OQK3Mzn",
+  "__v": 0
+},{
+  "_id": "pAJX2XY9Z3",
+  "author": {
+    "$oid": "629038a4678b27fc4f35f0b4"
+  },
+  "description": "Second nanoid test",
+  "imageUrl": "https://naturegram-heroku-kcmaxwell.s3.amazonaws.com/user_1654388380611.jpg",
+  "timestamp": {
+    "$date": {
+      "$numberLong": "1654388381674"
+    }
+  },
+  "comments": [],
+  "likes": [],
+  "__v": 0
+},{
+  "_id": "GY5bERAmHJGn",
+  "author": {
+    "$oid": "629038a4678b27fc4f35f0b4"
+  },
+  "description": "Another nanoid test",
+  "imageUrl": "https://naturegram-heroku-kcmaxwell.s3.amazonaws.com/user_1654388521625.jpg",
+  "timestamp": {
+    "$date": {
+      "$numberLong": "1654388522605"
+    }
+  },
+  "comments": [],
+  "likes": [],
+  "__v": 0
+},{
+  "_id": "qY7IlrYmMJ5",
+  "author": {
+    "$oid": "629038a4678b27fc4f35f0b4"
+  },
+  "description": "Nanoid test again",
+  "imageUrl": "https://naturegram-heroku-kcmaxwell.s3.amazonaws.com/user_1654388549653.jpg",
+  "timestamp": {
+    "$date": {
+      "$numberLong": "1654388550261"
+    }
+  },
+  "comments": [],
+  "likes": [],
+  "__v": 0
+}]

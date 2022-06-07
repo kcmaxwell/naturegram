@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const passportLocalMongoose = require('passport-local-mongoose');
+const {nanoid} = require('nanoid');
 
 const Session = new Schema({
     refreshToken: {
@@ -13,8 +14,8 @@ const UserSchema = new Schema({
     username: {type: String, required: true },
     fullName: { type: String, required: true },
     profilePicUrl: { type: String },
-    posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
-    savedPosts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+    posts: [{ type: String, ref: 'Post' }],
+    savedPosts: [{ type: String, ref: 'Post' }],
     followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     refreshToken: {

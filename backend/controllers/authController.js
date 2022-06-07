@@ -88,18 +88,19 @@ exports.signup = async function (req, res, next) {
 							res.status(400);
 							res.send(err);
 						} else {
-							const token = getToken({ _id: user._id });
-							const refreshToken = getRefreshToken({ _id: user._id });
-							user.refreshToken.push({ refreshToken });
-							user.save((err, user) => {
-								if (err) {
-									res.status(400);
-									res.send(err);
-								} else {
-									res.cookie('refreshToken', refreshToken, COOKIE_OPTIONS);
-									res.status(201).send({ success: true, token: token });
-								}
-							});
+							// const token = getToken({ _id: user._id });
+							// const refreshToken = getRefreshToken({ _id: user._id });
+							// user.refreshToken.push({ refreshToken });
+							// user.save((err, user) => {
+							// 	if (err) {
+							// 		res.status(400);
+							// 		res.send(err);
+							// 	} else {
+							// 		res.cookie('refreshToken', refreshToken, COOKIE_OPTIONS);
+							// 		res.status(201).send({ success: true, token: token });
+							// 	}
+							// });
+							res.status(201).send({success: true});
 						}
 					}
 				);

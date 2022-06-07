@@ -1,4 +1,8 @@
 describe('Signup page', () => {
+	before(() => {
+		cy.task('db:seed');
+	});
+
 	beforeEach(() => {
 		cy.visit('/signup');
 	});

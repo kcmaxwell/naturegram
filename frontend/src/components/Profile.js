@@ -1,7 +1,9 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState, useRef } from "react";
 import { UserContext } from "../context/UserContext";
 import { useNavigate, useParams } from 'react-router-dom';
 import HTTP404 from "./HTTP404";
+import { useDetectOutsideClick } from '../hooks/useDetectOutsideClick';
+import Popup from './Popup';
 
 export default function Profile() {
     const navigate = useNavigate();
@@ -10,6 +12,10 @@ export default function Profile() {
     const [userContext, setUserContext] = useContext(UserContext);
     const [notFoundError, setNotFoundError] = useState(null);
     const [error, setError] = useState('');
+
+    const popupRef = useRef(null);
+    const [isFollowingActive, setIsFollowingActive] = useDetectOutsideClick(popupRef, false);
+    const [isFollowersActive, setIsFollowersActive] = useDetectOutsideClick(popupRef, false);
 
     const getUserInfo = useCallback(() => {
         fetch(process.env.REACT_APP_BACKEND + '/users/' + username, {
@@ -96,7 +102,7 @@ export default function Profile() {
             setError('Error following user.');
           }
         })
-      });
+      }, [setError, getUserInfo, userContext, username]);
 
     return notFoundError ? (
       <><HTTP404 /></>
@@ -109,10 +115,16 @@ export default function Profile() {
             {error && <h1>{error}</h1>}
             <h1>{userInfo.username}'s Profile Page</h1>
             {userContext.details.username !== username && <button data-cy='follow' onClick={followUser}>Follow</button>}
-            <button data-cy='followingList'>Following</button>
-            <button data-cy='followersList'>Followers</button>
+            <button data-cy='followingList' onClick={() => setIsFollowingActive(!isFollowingActive)}>Following</button>
+            <button data-cy='followersList' onClick={() => setIsFollowersActive(!isFollowersActive)}>Followers</button>
             <button data-cy='posts'>Posts</button>
             {userContext.details.username === username && <button data-cy='savedPosts'>Saved Posts</button>}
+            {isFollowingActive && <Popup innerRef={popupRef}>
+              <h1>Following</h1>
+            </Popup>}
+            {isFollowersActive && <Popup innerRef={popupRef}>
+              <h1>Followers</h1>
+            </Popup>}
         </>
     )
 }

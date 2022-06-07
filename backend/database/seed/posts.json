@@ -1,0 +1,27 @@
+[{
+  "_id": "hl4gXLbtAXtH",
+  "author": "629d47809a38377fb0205d30",
+  "description": "User's first post",
+  "imageUrl": "https://naturegram-heroku-kcmaxwell.s3.amazonaws.com/user_1654474658347.jpg",
+  "timestamp": {
+    "$date": {
+      "$numberLong": "1654474659379"
+    }
+  },
+  "comments": [],
+  "likes": [],
+  "__v": 0
+},{
+  "_id": "1VHlrb46GwXb",
+  "author": "629d47809a38377fb0205d30",
+  "description": "User's second post",
+  "imageUrl": "https://naturegram-heroku-kcmaxwell.s3.amazonaws.com/user_1654474667624.jpg",
+  "timestamp": {
+    "$date": {
+      "$numberLong": "1654474668426"
+    }
+  },
+  "comments": [],
+  "likes": [],
+  "__v": 0
+}]

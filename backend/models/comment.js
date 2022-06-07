@@ -1,14 +1,16 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const {nanoid} = require('nanoid');
 
 var CommentSchema = new Schema({
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    _id: { type: String, default: () => nanoid(12) },
+    user: { type: String, ref: 'User' },
     content: { type: String, required: true, maxlength: 2200 },
-    timestamp: { type: DataTransfer, required: true },
-    post: { type: Schema.Types.ObjectId, ref: 'Post' },
-    likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    topComment: { type: Schema.Types.ObjectId, ref: 'Comment' },
-    replies: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
+    timestamp: { type: Date, required: true },
+    post: { type: String, ref: 'Post' },
+    likes: [{ type: String, ref: 'User' }],
+    topComment: { type: String, ref: 'Comment' },
+    replies: [{ type: String, ref: 'Comment' }]
 });
 
 module.exports = mongoose.model('Comment', CommentSchema);

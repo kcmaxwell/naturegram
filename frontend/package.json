@@ -38,7 +38,10 @@
     ]
   },
   "devDependencies": {
-    "cypress": "^9.6.1",
-    "cypress-dotenv": "^2.0.0"
+    "axios": "^0.27.2",
+    "cypress": "^10.0.2",
+    "cypress-dotenv": "^2.0.0",
+    "cypress-mongo-seeder": "^1.0.8",
+    "mongoose": "^6.3.5"
   }
 }

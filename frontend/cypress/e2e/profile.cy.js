@@ -1,6 +1,8 @@
 describe('Profile page', () => {
     beforeEach(() => {
-        cy.request('POST', Cypress.env('BACKEND') + '/auth/login', 
+        cy.task('db:seed');
+
+        cy.request('POST', Cypress.env('backend') + '/auth/login', 
             {username: 'user', password: 'pass'})
             .then(res => {
                 expect(res.status).to.eq(200);
@@ -8,7 +10,7 @@ describe('Profile page', () => {
     });
 
     it('should be possible to follow a user from their profile', () => {
-        cy.visit('/user/otherUser');
+        cy.visit('/user/user2');
         cy.get('[data-cy=follow]').click();
         cy.visit('/user');
         cy.get('[data-cy=following]').click();

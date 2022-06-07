@@ -1,4 +1,5 @@
 const Post = require('../models/post');
+const User = require('../models/user');
 const mongoose = require('mongoose');
 
 exports.getPost = async function (req, res, next) {
@@ -29,8 +30,34 @@ exports.createPost = async function (req, res, next) {
 			res.status(400);
 			res.send(err);
 		} else {
-			res.status(201);
-			res.send({ success: true, id: post._id });
+			User.findById(req.user._id, (err, author) => {
+				if (err) throw err;
+				if (!author) res.sendStatus(400);
+				else {
+					author.posts.push(post._id);
+					author.save((err, user) => {
+						if (err) {
+							res.status(400);
+							res.send(err);
+						} else {
+							res.status(201);
+							res.send({ success: true, id: post._id });
+						}
+					});
+				}
+			});
+			// let author = User.findById(req.user._id);
+			// if (author) {
+			// 	author.posts.push(post);
+			// 	author.save((err, user) => {
+			// 		if (err) {
+			// 			res.status(400);
+			// 			res.send(err);
+			// 		} else {
+			// 			res.status(201);
+			// 			res.send({ success: true, id: post._id });
+			// 		}
+			// 	});
 		}
 	});
 };
