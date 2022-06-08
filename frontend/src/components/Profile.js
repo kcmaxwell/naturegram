@@ -4,6 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import HTTP404 from "./HTTP404";
 import { useDetectOutsideClick } from '../hooks/useDetectOutsideClick';
 import Popup from './Popup';
+import FollowerList from './FollowerList';
+import FollowingList from './FollowingList';
 
 export default function Profile() {
     const navigate = useNavigate();
@@ -18,7 +20,7 @@ export default function Profile() {
     const [isFollowersActive, setIsFollowersActive] = useDetectOutsideClick(popupRef, false);
 
     const getUserInfo = useCallback(() => {
-        fetch(process.env.REACT_APP_BACKEND + '/users/' + username, {
+        fetch(process.env.REACT_APP_BACKEND + '/users/getUser/' + username, {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -119,11 +121,12 @@ export default function Profile() {
             <button data-cy='followersList' onClick={() => setIsFollowersActive(!isFollowersActive)}>Followers</button>
             <button data-cy='posts'>Posts</button>
             {userContext.details.username === username && <button data-cy='savedPosts'>Saved Posts</button>}
+            
             {isFollowingActive && <Popup innerRef={popupRef}>
-              <h1>Following</h1>
+              <FollowingList username={username} />
             </Popup>}
             {isFollowersActive && <Popup innerRef={popupRef}>
-              <h1>Followers</h1>
+              <FollowerList username={username} />
             </Popup>}
         </>
     )

@@ -60,7 +60,7 @@ describe('Users', () => {
             const { header } = loginResponse;
 
             await request(app)
-                .get('/users/username')
+                .get('/users/getUser/username')
                 .set({
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${loginResponse.body.token}`,
@@ -73,7 +73,7 @@ describe('Users', () => {
             const { header } = loginResponse;
 
             await request(app)
-                .get('/users/notAUser')
+                .get('/users/getUser/notAUser')
                 .set({
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${loginResponse.body.token}`,

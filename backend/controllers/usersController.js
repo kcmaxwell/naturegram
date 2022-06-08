@@ -12,6 +12,30 @@ exports.getUser = async function (req, res, next) {
 	});
 };
 
+exports.getFollowers = async function (req, res, next) {
+	User.findOne({username: req.params.username }).populate('followers').exec((err, user) => {
+		if (err) throw err;
+		if (!user) {
+			res.sendStatus(400);
+		} else {
+			res.status(200);
+			res.send(user.followers);
+		}
+	})
+}
+
+exports.getFollowing = async function (req, res, next) {
+	User.findOne({username: req.params.username }).populate('following').exec((err, user) => {
+		if (err) throw err;
+		if (!user) {
+			res.sendStatus(400);
+		} else {
+			res.status(200);
+			res.send(user.following);
+		}
+	})
+}
+
 exports.followUser = async function (req, res, next) {
 	// find if both users exist, then update their respective follow arrays
 	// User.findOne({ username: req.body.username }, async (err, followedUser) => {
