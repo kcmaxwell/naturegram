@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Post = require('../models/post');
 
 exports.getUser = async function (req, res, next) {
 	User.findOne({ username: req.params.username }, async (err, user) => {
@@ -19,7 +20,7 @@ exports.getFollowers = async function (req, res, next) {
 			res.sendStatus(400);
 		} else {
 			res.status(200);
-			res.send(user.followers);
+			res.json(user.followers);
 		}
 	})
 }
@@ -32,6 +33,30 @@ exports.getFollowing = async function (req, res, next) {
 		} else {
 			res.status(200);
 			res.send(user.following);
+		}
+	})
+}
+
+exports.getPosts = async function (req, res, next) {
+	User.findOne({username: req.params.username}).populate('posts').exec((err, user) => {
+		if (err) throw err;
+		if (!user) {
+			res.sendStatus(400);
+		} else {
+			res.status(200);
+			res.send(user.posts);
+		}
+	})
+}
+
+exports.getSavedPosts = async function (req, res, next) {
+	User.findOne({username: req.user.username}).populate('savedPosts').exec((err, user) => {
+		if (err) throw err;
+		if (!user) {
+			res.sendStatus(400);
+		} else {
+			res.status(200);
+			res.send(user.savedPosts);
 		}
 	})
 }
@@ -139,3 +164,24 @@ exports.followUser = async function (req, res, next) {
 	// 	}
 	// })
 };
+
+exports.savePost = async (req, res, next) => {
+	// Post.find({_id: req.params.postId}, async (err, post) => {
+	// })
+	User.findOne({username: req.user.username}, async (err, user) => {
+		if (err) throw err;
+		if (!user) {
+			res.sendStatus(400);
+		} else {
+			user.savedPosts.push(req.body.postId);
+			user.save((err, saved) => {
+				if (err) throw err;
+				if (!saved) {
+					res.sendStatus(400);
+				} else {
+					res.sendStatus(200);
+				}
+			})
+		}
+	})
+}
