@@ -5,7 +5,15 @@ const app = require('../../app');
 const User = require('../../models/user');
 const Post = require('../../models/post');
 
-const { signup, login, getPost, postPost } = require('../utils/request');
+const {
+	signup,
+	login,
+	getPost,
+	postPost,
+	getAuthor,
+	likePost,
+	getUser,
+} = require('../utils/request');
 
 describe('Posts', () => {
 	let mongoServer;
@@ -51,18 +59,6 @@ describe('Posts', () => {
 	describe('GET post', () => {
 		let postId;
 		beforeAll(async () => {
-			// let post = new Post({
-			// 	author: userId,
-			// 	description: 'A post',
-			// 	imageUrl:
-			// 		'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
-			// 	timestamp: Date.now(),
-			// });
-			// post.save((err, newPost) => {
-			// 	if (err) throw err;
-			// 	postId = newPost._id;
-			// });
-
 			let post = {
 				description: 'A post',
 				imageUrl:
@@ -85,6 +81,27 @@ describe('Posts', () => {
 		});
 	});
 
+	describe('GET post author', () => {
+		let postId;
+		beforeAll(async () => {
+			let post = {
+				description: 'A post',
+				imageUrl:
+					'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
+				timestamp: Date.now(),
+			};
+			const response = await postPost(post, loginResponse);
+			expect(response.status).toBe(201);
+			postId = response.body.id;
+		});
+
+		it("should return 200 OK and the post's author", async () => {
+			const response = await getAuthor(postId, loginResponse);
+			expect(response.status).toBe(200);
+			expect(response.body.username).toStrictEqual(signupUser.username);
+		});
+	});
+
 	describe('POST new post', () => {
 		it('should return 200 OK and the id of the post', async () => {
 			const post = {
@@ -98,9 +115,9 @@ describe('Posts', () => {
 
 			expect(response.status).toBe(201);
 			expect(response.body.id).toBeTruthy();
-			// await Post.findById(response.body.id, (err, foundPost) => {
-			//     expect(foundPost).toBeTruthy();
-			// })
+
+			const foundPost = await Post.findById(response.body.id);
+			expect(foundPost).toBeTruthy();
 		});
 
 		it('should return 400 Bad Request with invalid input', async () => {
@@ -112,6 +129,46 @@ describe('Posts', () => {
 
 			const response = await postPost(post, loginResponse);
 			expect(response.status).toBe(400);
+		});
+	});
+
+	describe('PUT like post', () => {
+		let postId;
+		beforeAll(async () => {
+			let post = {
+				description: 'A post',
+				imageUrl:
+					'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
+				timestamp: Date.now(),
+			};
+			const response = await postPost(post, loginResponse);
+			expect(response.status).toBe(201);
+			postId = response.body.id;
+		});
+
+		beforeEach(async () => {
+			await Post.findOneAndUpdate({ _id: postId }, { likes: [] });
+		});
+
+		it("should return 200 OK and add the user's id to the likes array", async () => {
+			const userResponse = await getUser(signupUser.username, loginResponse);
+
+			const response = await likePost(postId, loginResponse);
+			expect(response.status).toBe(200);
+
+			const foundPost = await Post.findOne({ _id: postId });
+			expect(foundPost.likes.length).toStrictEqual(1);
+			expect(foundPost.likes[0]).toBe(userResponse.body._id);
+		});
+
+		it("should return 200 OK and remove the user's id if the post was already liked", async () => {
+			const response = await likePost(postId, loginResponse);
+			expect(response.status).toBe(200);
+			const secondResponse = await likePost(postId, loginResponse);
+			expect(secondResponse.status).toBe(200);
+
+			const foundPost = await Post.findOne({ _id: postId });
+			expect(foundPost.likes.length).toStrictEqual(0);
 		});
 	});
 });

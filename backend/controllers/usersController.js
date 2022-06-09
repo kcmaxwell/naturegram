@@ -20,7 +20,7 @@ exports.getFollowers = async function (req, res, next) {
 			res.sendStatus(400);
 		} else {
 			res.status(200);
-			res.json(user.followers);
+			res.send(user.followers);
 		}
 	})
 }

@@ -36,9 +36,9 @@ export default function SavedPostsList({ username }) {
 						<h1>SAVED POSTS IS EMPTY</h1>
 					</>
 				) : (
-					<div className="postsContainer">
+					<div className="postsContainer" data-cy="savedPosts">
 						{posts.map((post, i) => {
-							return <PostThumbnail post={post} />;
+							return <PostThumbnail key={i} post={post} />;
 						})}
 					</div>
 				))}

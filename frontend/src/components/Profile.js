@@ -145,36 +145,29 @@ export default function Profile() {
 				</button>
 			)}
 			<button
-				data-cy="followingList"
+				data-cy="followingButton"
 				onClick={() => setIsFollowingActive(!isFollowingActive)}
 			>
 				Following
 			</button>
 			<button
-				data-cy="followersList"
+				data-cy="followersButton"
 				onClick={() => setIsFollowersActive(!isFollowersActive)}
 			>
 				Followers
 			</button>
-			<button data-cy="posts" onClick={clickPosts}>
+			<button data-cy="postsButton" onClick={clickPosts}>
 				Posts
 			</button>
 			{userContext.details.username === username && (
-				<button data-cy="savedPosts" onClick={clickSavedPosts}>
+				<button data-cy="savedPostsButton" onClick={clickSavedPosts}>
 					Saved Posts
 				</button>
 			)}
 
-			{isPostsVisible && (
-				<div>
-					<h1>IS POSTS VISIBLE</h1>
-					<PostsList username={username} />
-				</div>
-			)}
+			{isPostsVisible && <PostsList username={username} />}
 
-      {isSavedPostsVisible && (
-        <SavedPostsList username={username} />
-      )}
+			{isSavedPostsVisible && <SavedPostsList username={username} />}
 
 			{isFollowingActive && (
 				<Popup innerRef={popupRef}>

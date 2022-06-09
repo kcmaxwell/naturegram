@@ -3,11 +3,7 @@
   "author": "629fed4cdb6d42870161664e",
   "description": "User's first post",
   "imageUrl": "https://naturegram-heroku-kcmaxwell.s3.amazonaws.com/user_1654648200927.jpg",
-  "timestamp": {
-    "$date": {
-      "$numberLong": "1654648202635"
-    }
-  },
+  "timestamp": "1654648202635",
   "comments": [],
   "likes": [],
   "__v": 0
@@ -16,11 +12,7 @@
   "author": "629fed4cdb6d42870161664e",
   "description": "User's second post",
   "imageUrl": "https://naturegram-heroku-kcmaxwell.s3.amazonaws.com/user_1654648210812.jpg",
-  "timestamp": {
-    "$date": {
-      "$numberLong": "1654648211594"
-    }
-  },
+  "timestamp": "1654648211594",
   "comments": [],
   "likes": [],
   "__v": 0
@@ -29,11 +21,7 @@
   "author": "629fed54db6d428701616652",
   "description": "User2's first post",
   "imageUrl": "https://naturegram-heroku-kcmaxwell.s3.amazonaws.com/user2_1654648242144.jpg",
-  "timestamp": {
-    "$date": {
-      "$numberLong": "1654648242846"
-    }
-  },
+  "timestamp": "1654648242846",
   "comments": [],
   "likes": [],
   "__v": 0
@@ -42,11 +30,7 @@
   "author": "629fed54db6d428701616652",
   "description": "User2's second post",
   "imageUrl": "https://naturegram-heroku-kcmaxwell.s3.amazonaws.com/user2_1654648252561.jpg",
-  "timestamp": {
-    "$date": {
-      "$numberLong": "1654648253248"
-    }
-  },
+  "timestamp": "1654648253248",
   "comments": [],
   "likes": [],
   "__v": 0

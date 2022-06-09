@@ -36,9 +36,9 @@ export default function PostsList({ username }) {
 						<h1>POSTS IS EMPTY</h1>
 					</>
 				) : (
-					<div className="postsContainer">
+					<div className="postsContainer" data-cy="posts">
 						{posts.map((post, i) => {
-							return <PostThumbnail post={post} />;
+							return <PostThumbnail key={i} post={post} />;
 						})}
 					</div>
 				))}

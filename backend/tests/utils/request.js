@@ -95,6 +95,18 @@ exports.getPost = async (postId, loginResponse) => {
 		.set('Cookie', [...header['set-cookie']]);
 };
 
+exports.getAuthor = async (postId, loginResponse) => {
+	const { header } = loginResponse;
+
+	return await request(app)
+		.get('/posts/author/' + postId)
+		.set({
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${loginResponse.body.token}`,
+		})
+		.set('Cookie', [...header['set-cookie']]);
+}
+
 exports.postPost = async (post, loginResponse) => {
 	const { header } = loginResponse;
 
@@ -107,6 +119,19 @@ exports.postPost = async (post, loginResponse) => {
 		.set('Cookie', [...header['set-cookie']])
 		.send(post);
 };
+
+exports.likePost = async (postId, loginResponse) => {
+	const { header } = loginResponse;
+
+	return await request(app)
+		.put('/posts/like')
+		.set({
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${loginResponse.body.token}`,
+		})
+		.set('Cookie', [...header['set-cookie']])
+		.send({ postId });
+}
 
 exports.savePost = async (postId, loginResponse) => {
 	const { header } = loginResponse;

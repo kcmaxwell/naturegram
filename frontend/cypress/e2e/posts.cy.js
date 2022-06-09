@@ -1,7 +1,7 @@
 describe('Post page', () => {
-    const ownPost = 1234;
-    const otherUserPost = 1234;
-    const unlikePost = 1234;
+    const ownPost = 'VBg2buHoQJXl';
+    const otherUserPost = 'mseYBbuyzvC9';
+    const unlikePost = 'ejHGMAYTNx_2';
 
     beforeEach(() => {
         cy.task('db:seed');
@@ -23,19 +23,25 @@ describe('Post page', () => {
         cy.get('[data-cy=timestamp]').should('be.visible');
     });
 
-    it('should be possible to like a different user\'s post', () => {
+    it('should be possible to like a post', () => {
         cy.visit('/post/' + otherUserPost);
         cy.get('[data-cy=likePost]').click();
-
-
+        cy.get('[data-cy=likes]').contains(1);
     })
 
     it('should be possible to unlike a post by clicking twice', () => {
         cy.visit('/post/' + unlikePost);
         cy.get('[data-cy=likePost]').click();
         cy.get('[data-cy=likePost]').click();
+        cy.get('[data-cy=likes]').contains(0);
     })
 
+    it('should be possible to save a post', () => {
+        cy.visit('/post/' + otherUserPost);
+        cy.get('[data-cy=savePost]').click();
+    })
+
+    /*
     it('should be able to leave a comment on any post', () => {
         cy.visit('/post/' + otherUserPost);
         cy.get('[data-cy=leaveComment]').type('This is my test comment.');
@@ -43,4 +49,5 @@ describe('Post page', () => {
 
 
     })
+    */
 })

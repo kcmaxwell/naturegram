@@ -17,6 +17,21 @@ exports.getPost = async function (req, res, next) {
 	}
 };
 
+exports.getAuthor = async function (req, res, next) {
+	if (mongoose.Types.ObjectId.isValid(req.params.postId)) {
+		Post.findById(req.params.postId).populate('author').exec((err, post) => {
+			if (err) throw err;
+			if (!post) res.sendStatus(404);
+			else {
+				res.status(200);
+				res.send(post.author);
+			}
+		})
+	} else {
+		res.sendStatus(404);
+	}
+}
+
 exports.createPost = async function (req, res, next) {
 	let post = new Post({
 		author: req.user._id,
@@ -61,3 +76,26 @@ exports.createPost = async function (req, res, next) {
 		}
 	});
 };
+
+exports.likePost = async function (req, res, next) {
+	Post.findOne({_id: req.body.postId}, (err, post) => {
+		if (err) throw err;
+		if (!post) {
+			res.sendStatus(400);
+		} else {
+			const userIndex = post.likes.indexOf(req.user._id);
+			if (userIndex !== -1) {
+				post.likes.splice(userIndex, 1);
+			} else {
+				post.likes.push(req.user._id);
+			}
+
+			post.save((err) => {
+				if (err) throw err;
+				else {
+					res.sendStatus(200);
+				}
+			})
+		}
+	})
+}
