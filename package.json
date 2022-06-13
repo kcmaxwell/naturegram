@@ -7,7 +7,10 @@
     "cypress": "cd frontend && npm run cypress",
     "test-front": "cd frontend && npm start",
     "test-back": "cd backend && npm run test-server",
-    "test": "npm-run-all -p -r cypress test-front test-back"
+    "test": "npm-run-all -p -r cypress test-front test-back",
+    "heroku-postbuild": "npm-run-all install-front install-back",
+    "install-front": "cd frontend && npm i && npm start",
+    "install-back": "cd backend && npm i && npm start"
   },
   "repository": {
     "type": "git",

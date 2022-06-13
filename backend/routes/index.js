@@ -10,12 +10,7 @@ router.use('/auth', authRouter);
 router.use('/users', usersRouter);
 router.use('/posts', postsRouter);
 
-if (process.env.NODE_ENV === 'test')
+if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'jest')
   router.use('/test', testRouter);
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
 
 module.exports = router;

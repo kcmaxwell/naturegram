@@ -8,6 +8,10 @@
     "test-server": "NODE_ENV=test npm run server",
     "test": "NODE_ENV=jest jest --watchAll --verbose"
   },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": ["./controllers/**", "./models/**", "./routes/**", "./strategies/**", "./utils/**", "./*.js"]
+  },
   "dependencies": {
     "aws-sdk": "^2.1146.0",
     "body-parser": "^1.20.0",
@@ -23,6 +27,7 @@
     "mongoose": "^6.3.4",
     "morgan": "~1.9.1",
     "nanoid": "^3.3.4",
+    "nyc": "^15.1.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
