@@ -12,7 +12,7 @@ export default function Post({post, ...props}) {
 	const thisPostId = postId ? postId : post._id;
 
 	const fetchPostDetails = useCallback(() => {
-		fetch(process.env.REACT_APP_BACKEND + '/posts/get/' + thisPostId, {
+		fetch(process.env.REACT_APP_BACKEND + '/api/posts/get/' + thisPostId, {
 			method: 'GET',
 			credentials: 'include',
 			headers: {
@@ -35,7 +35,7 @@ export default function Post({post, ...props}) {
 	}, [setPostDetails, setNotFoundError, thisPostId, userContext.token]);
 
 	const fetchPostAuthor = useCallback(() => {
-		fetch(process.env.REACT_APP_BACKEND + '/posts/author/' + thisPostId, {
+		fetch(process.env.REACT_APP_BACKEND + '/api/posts/author/' + thisPostId, {
 			method: 'GET',
 			credentials: 'include',
 			headers: {
@@ -64,7 +64,7 @@ export default function Post({post, ...props}) {
 	// }, [fetchPostAuthor, author])
 
 	const likePost = async () => {
-		await fetch(process.env.REACT_APP_BACKEND + '/posts/like/', {
+		await fetch(process.env.REACT_APP_BACKEND + '/api/posts/like/', {
 			method: 'PUT',
 			credentials: 'include',
 			headers: {
@@ -80,7 +80,7 @@ export default function Post({post, ...props}) {
 	}
 
 	const savePost = async () => {
-		await fetch(process.env.REACT_APP_BACKEND + '/users/savePost', {
+		await fetch(process.env.REACT_APP_BACKEND + '/api/users/savePost', {
 			method: 'PUT',
 			credentials: 'include',
 			headers: {

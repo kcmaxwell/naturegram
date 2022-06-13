@@ -14,7 +14,7 @@ export default function Signup() {
 		const genericError = 'An error occurred. Please try again later.';
 		setError('');
 
-		fetch(process.env.REACT_APP_BACKEND + '/auth/signup', {
+		fetch(process.env.REACT_APP_BACKEND + '/api/auth/signup', {
 			method: 'POST',
 			credentials: 'include',
 			headers: { 'Content-Type': 'application/json' },

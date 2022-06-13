@@ -2,11 +2,11 @@ const request = require('supertest');
 const app = require('../../app');
 
 exports.signup = async (user) => {
-	return await request(app).post('/auth/signup').send(user);
+	return await request(app).post('/api/auth/signup').send(user);
 };
 
 exports.login = async (user) => {
-	return await request(app).post('/auth/login').send(user);
+	return await request(app).post('/api/auth/login').send(user);
 };
 
 exports.getUser = async (username, loginResponse) => {
@@ -14,7 +14,7 @@ exports.getUser = async (username, loginResponse) => {
 	const token = loginResponse.body.token;
 
 	return await request(app)
-		.get('/users/getUser/' + username)
+		.get('/api/users/getUser/' + username)
 		.set({
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${loginResponse.body.token}`,
@@ -26,7 +26,7 @@ exports.getFollowers = async (username, loginResponse) => {
 	const { header } = loginResponse;
 
 	return await request(app)
-		.get('/users/followers/' + username)
+		.get('/api/users/followers/' + username)
 		.set({
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${loginResponse.body.token}`,
@@ -38,7 +38,7 @@ exports.getFollowing = async (username, loginResponse) => {
 	const { header } = loginResponse;
 
 	return await request(app)
-		.get('/users/following/' + username)
+		.get('/api/users/following/' + username)
 		.set({
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${loginResponse.body.token}`,
@@ -50,7 +50,7 @@ exports.getPosts = async (username, loginResponse) => {
 	const { header } = loginResponse;
 
 	return await request(app)
-		.get('/users/posts/' + username)
+		.get('/api/users/posts/' + username)
 		.set({
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${loginResponse.body.token}`,
@@ -62,7 +62,7 @@ exports.getSavedPosts = async (loginResponse) => {
 	const { header } = loginResponse;
 
 	return await request(app)
-		.get('/users/savedPosts')
+		.get('/api/users/savedPosts')
 		.set({
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${loginResponse.body.token}`,
@@ -74,7 +74,7 @@ exports.putFollow = async (usernameToFollow, loginResponse) => {
 	const { header } = loginResponse;
 
 	return await request(app)
-		.put('/users/follow')
+		.put('/api/users/follow')
 		.set({
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${loginResponse.body.token}`,
@@ -87,7 +87,7 @@ exports.getPost = async (postId, loginResponse) => {
 	const { header } = loginResponse;
 
 	return await request(app)
-		.get('/posts/get/' + postId)
+		.get('/api/posts/get/' + postId)
 		.set({
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${loginResponse.body.token}`,
@@ -99,7 +99,7 @@ exports.getAuthor = async (postId, loginResponse) => {
 	const { header } = loginResponse;
 
 	return await request(app)
-		.get('/posts/author/' + postId)
+		.get('/api/posts/author/' + postId)
 		.set({
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${loginResponse.body.token}`,
@@ -111,7 +111,7 @@ exports.postPost = async (post, loginResponse) => {
 	const { header } = loginResponse;
 
 	return await request(app)
-		.post('/posts/createPost')
+		.post('/api/posts/createPost')
 		.set({
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${loginResponse.body.token}`,
@@ -124,7 +124,7 @@ exports.likePost = async (postId, loginResponse) => {
 	const { header } = loginResponse;
 
 	return await request(app)
-		.put('/posts/like')
+		.put('/api/posts/like')
 		.set({
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${loginResponse.body.token}`,
@@ -137,7 +137,7 @@ exports.savePost = async (postId, loginResponse) => {
 	const { header } = loginResponse;
 
 	return await request(app)
-		.put('/users/savePost')
+		.put('/api/users/savePost')
 		.set({
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${loginResponse.body.token}`,

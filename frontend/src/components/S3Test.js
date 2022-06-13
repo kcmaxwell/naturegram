@@ -9,7 +9,7 @@ export default function S3Test() {
     const image = 'https://naturegram-heroku-kcmaxwell.s3.amazonaws.com/user_1654114017001.jpg'
 
     const fetchUserDetails = useCallback(() => {
-        fetch(process.env.REACT_APP_BACKEND + '/auth/userInfo', {
+        fetch(process.env.REACT_APP_BACKEND + '/api/auth/userInfo', {
           method: 'GET',
           credentials: 'include',
           headers: {

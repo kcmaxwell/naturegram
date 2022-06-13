@@ -52,35 +52,35 @@ describe('Authentication', () => {
     describe('POST login', () => {
         beforeEach(async () => {
             await request(app)
-                .post('/auth/signup')
+                .post('/api/auth/signup')
                 .send(signupUser)
                 .expect(201);
         });
 
         it('should return 200 OK with good input', async() => {
             await request(app)
-                .post('/auth/login')
+                .post('/api/auth/login')
                 .send(loginUser)
                 .expect(200);
         });
 
         it('should return 400 Bad Request with invalid input', async() => {
             await request(app)
-            .post('/auth/login')
+            .post('/api/auth/login')
             .send({username: '', password: 456 })
             .expect(400);
         });
 
         it('should return 401 Unauthorized with non existing username', async() => {
             await request(app)
-                .post('/auth/login')
+                .post('/api/auth/login')
                 .send({username: 'notAUsername', password: loginUser.password })
                 .expect(401);
         });
 
         it('should return 401 Unauthorized with incorrect password', async() => {
             await request(app)
-            .post('/auth/login')
+            .post('/api/auth/login')
             .send({username: loginUser.username, password: 'notAPassword' })
             .expect(401);
         });
@@ -89,7 +89,7 @@ describe('Authentication', () => {
     describe('POST signup', () => {
         it('should return 201 Created with good input', async() => {
             await request(app)
-                .post('/auth/signup')
+                .post('/api/auth/signup')
                 .send(signupUser)
                 .expect(201);
 
@@ -99,19 +99,19 @@ describe('Authentication', () => {
 
         it ('should return 409 Conflict if username already exists', async() => {
             await request(app)
-                .post('/auth/signup')
+                .post('/api/auth/signup')
                 .send(signupUser)
                 .expect(201);
             
             await request(app)
-                .post('/auth/signup')
+                .post('/api/auth/signup')
                 .send(signupUser)
                 .expect(409);
         });
 
         it('should return 400 Bad Request with invalid input', async() => {
             await request(app)
-                .post('/auth/signup')
+                .post('/api/auth/signup')
                 .send({username: 'username', password: 'password', fullName: ''})
                 .expect(400);
         });
@@ -120,21 +120,21 @@ describe('Authentication', () => {
     describe('POST logout', () => {
         beforeEach(async () => {
             await request(app)
-                .post('/auth/signup')
+                .post('/api/auth/signup')
                 .send(signupUser)
                 .expect(201);
         });
 
         it('should return 200 OK if logged in', async () => {
             const response = await request(app)
-                .post('/auth/login')
+                .post('/api/auth/login')
                 .send(loginUser);
 
             expect(response.status).toBe(200);
 
             const { header } = response;
             await request(app)
-                .post('/auth/logout')
+                .post('/api/auth/logout')
                 .set({
                       "Content-Type": "application/json",
                       Authorization: `Bearer ${response.body.token}`,
@@ -145,7 +145,7 @@ describe('Authentication', () => {
 
         it('should return 401 Unauthorized if not logged in', async () => {
             await request(app)
-                .post('/auth/logout')
+                .post('/api/auth/logout')
                 .expect(401);
         });
 

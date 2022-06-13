@@ -7,7 +7,7 @@ export default function UserNavbarDropdown({username}) {
     const logout = () => {
         setError('');
 
-        fetch(process.env.REACT_APP_BACKEND + '/auth/logout', {
+        fetch(process.env.REACT_APP_BACKEND + '/api/auth/logout', {
             method: 'POST',
             credentials: "include",
             headers: {

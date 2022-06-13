@@ -10,7 +10,7 @@ export default function Home() {
     const logout = () => {
         setError('');
 
-        fetch(process.env.REACT_APP_BACKEND + '/auth/logout', {
+        fetch(process.env.REACT_APP_BACKEND + '/api/auth/logout', {
             method: 'POST',
             credentials: "include",
             headers: {
@@ -30,7 +30,7 @@ export default function Home() {
     }
   
     const fetchUserDetails = useCallback(() => {
-      fetch(process.env.REACT_APP_BACKEND + '/auth/userInfo', {
+      fetch(process.env.REACT_APP_BACKEND + '/api/auth/userInfo', {
         method: 'GET',
         credentials: 'include',
         headers: {

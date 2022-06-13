@@ -7,7 +7,7 @@ const AuthWrapper = () => {
 	const location = useLocation();
 
 	const verifyUser = useCallback(() => {
-		fetch(process.env.REACT_APP_BACKEND + '/auth/refreshToken', {
+		fetch(process.env.REACT_APP_BACKEND + '/api/auth/refreshToken', {
 			method: 'POST',
 			credentials: 'include',
 			headers: { 'Content-Type': 'application/json' },
@@ -32,7 +32,7 @@ const AuthWrapper = () => {
 	}, [verifyUser]);
 
 	const fetchUserDetails = useCallback(() => {
-		fetch(process.env.REACT_APP_BACKEND + '/auth/userInfo', {
+		fetch(process.env.REACT_APP_BACKEND + '/api/auth/userInfo', {
 			method: 'GET',
 			credentials: 'include',
 			headers: {

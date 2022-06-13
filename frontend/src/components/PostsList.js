@@ -8,7 +8,7 @@ export default function PostsList({ username, clickPost }) {
 	const [posts, setPosts] = useState(null);
 
 	const fetchPosts = useCallback(() => {
-		fetch(process.env.REACT_APP_BACKEND + '/users/posts/' + username, {
+		fetch(process.env.REACT_APP_BACKEND + '/api/users/posts/' + username, {
 			method: 'GET',
 			credentials: 'include',
 			headers: {

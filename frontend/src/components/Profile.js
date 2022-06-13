@@ -38,7 +38,7 @@ export default function Profile() {
 	const [clickedPost, setClickedPost] = useState(null);
 
 	const getUserInfo = useCallback(() => {
-		fetch(process.env.REACT_APP_BACKEND + '/users/getUser/' + username, {
+		fetch(process.env.REACT_APP_BACKEND + '/api/users/getUser/' + username, {
 			method: 'GET',
 			credentials: 'include',
 			headers: {
@@ -67,7 +67,7 @@ export default function Profile() {
 	const followUser = useCallback(() => {
 		setError('');
 
-		fetch(process.env.REACT_APP_BACKEND + '/users/follow', {
+		fetch(process.env.REACT_APP_BACKEND + '/api/users/follow', {
 			method: 'PUT',
 			credentials: 'include',
 			headers: {

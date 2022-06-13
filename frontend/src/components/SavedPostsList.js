@@ -8,7 +8,7 @@ export default function SavedPostsList({ username, clickPost }) {
 	const [posts, setPosts] = useState(null);
 
 	const fetchSavedPosts = useCallback(() => {
-		fetch(process.env.REACT_APP_BACKEND + '/users/savedPosts/', {
+		fetch(process.env.REACT_APP_BACKEND + '/api/users/savedPosts/', {
 			method: 'GET',
 			credentials: 'include',
 			headers: {

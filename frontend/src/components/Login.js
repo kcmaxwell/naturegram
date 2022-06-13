@@ -13,7 +13,7 @@ export default function Login() {
         const genericError = 'An error occurred. Please try again later.';
         setError('');
 
-        fetch(process.env.REACT_APP_BACKEND + '/auth/login', {
+        fetch(process.env.REACT_APP_BACKEND + '/api/auth/login', {
             method: "POST",
             credentials: 'include',
             headers: { 'Content-Type': 'application/json'},

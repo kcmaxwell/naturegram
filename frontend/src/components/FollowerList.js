@@ -6,7 +6,7 @@ export default function FollowerList({ username }) {
 	const [followers, setFollowers] = useState(null);
 
 	const fetchFollowers = useCallback(() => {
-		fetch(process.env.REACT_APP_BACKEND + '/users/followers/' + username, {
+		fetch(process.env.REACT_APP_BACKEND + '/api/users/followers/' + username, {
 			method: 'GET',
 			credentials: 'include',
 			headers: {

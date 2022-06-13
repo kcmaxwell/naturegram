@@ -15,7 +15,7 @@ export default function Upload() {
 
 		fetch(
 			process.env.REACT_APP_BACKEND +
-				'/auth/signS3?' +
+				'/api/auth/signS3?' +
 				new URLSearchParams({
 					fileType: image.type,
 					fileExt: image.name.split('.').pop(),
@@ -39,7 +39,7 @@ export default function Upload() {
 					if (!res.ok) {
 						setError('S3 Upload Failed');
 					} else {
-						fetch(process.env.REACT_APP_BACKEND + '/posts/createPost', {
+						fetch(process.env.REACT_APP_BACKEND + '/api/posts/createPost', {
 							method: 'POST',
 							credentials: 'include',
 							headers: {
