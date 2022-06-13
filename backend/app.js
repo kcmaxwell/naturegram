@@ -27,10 +27,10 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static(path.join(__dirname, 'public')));
 
 const whitelist = process.env.WHITELISTED_DOMAINS
-	? process.env.WHITELISTED_DOMAINS.split(',')
+	? process.env.WHITELISTED_DOMAINS.split(',').map(item => item.trim())
 	: [];
 const corsOptions = {
 	origin: function (origin, callback) {
@@ -68,7 +68,7 @@ app.use('/api', indexRouter);
 // 	res.sendFile('index.html', { root: path.join(__dirname, '/../frontend/build/')})
 // })
 
-app.use('/', express.static(path.join(__dirname, '/../frontend/build'), {index: false}))
+app.use(express.static(path.join(__dirname, '/../frontend/build'), {index: false}))
 app.get('*', (req, res) => {
 	res.sendFile(path.join(__dirname, '/../frontend/build/index.html'))
 })
