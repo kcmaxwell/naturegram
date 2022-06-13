@@ -9,8 +9,8 @@
     "test-back": "cd backend && npm run test-server",
     "test": "npm-run-all -p -r cypress test-front test-back",
     "heroku-postbuild": "npm-run-all install-front install-back",
-    "install-front": "cd frontend && npm i && npm start",
-    "install-back": "cd backend && npm i && npm start"
+    "install-front": "cd frontend && npm i && npm run build",
+    "install-back": "cd backend && npm i"
   },
   "repository": {
     "type": "git",
