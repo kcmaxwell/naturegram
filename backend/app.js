@@ -8,7 +8,9 @@ const passport = require('passport');
 const cors = require('cors');
 const aws = require('aws-sdk');
 
-require('dotenv').config();
+if (process.env.NODE_ENV !== 'production') {
+	require('dotenv').config();
+}
 require('./utils/connectdb');
 require('./strategies/JwtStrategy');
 require('./strategies/LocalStrategy');
@@ -17,7 +19,7 @@ require('./authenticate');
 const indexRouter = require('./routes/index');
 const { COOKIE_OPTIONS } = require('./authenticate');
 
-aws.config.region = 'us-east-1'
+aws.config.region = 'us-east-1';
 
 var app = express();
 
@@ -30,7 +32,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 //app.use(express.static(path.join(__dirname, 'public')));
 
 const whitelist = process.env.WHITELISTED_DOMAINS
-	? process.env.WHITELISTED_DOMAINS.split(',').map(item => item.trim())
+	? process.env.WHITELISTED_DOMAINS.split(',').map((item) => item.trim())
 	: [];
 const corsOptions = {
 	origin: function (origin, callback) {
@@ -68,9 +70,11 @@ app.use('/api', indexRouter);
 // 	res.sendFile('index.html', { root: path.join(__dirname, '/../frontend/build/')})
 // })
 
-app.use(express.static(path.join(__dirname, '/../frontend/build'), {index: false}))
+app.use(
+	express.static(path.join(__dirname, '/../frontend/build'), { index: false })
+);
 app.get('*', (req, res) => {
-	res.sendFile(path.join(__dirname, '/../frontend/build/index.html'))
-})
+	res.sendFile(path.join(__dirname, '/../frontend/build/index.html'));
+});
 
 module.exports = app;
