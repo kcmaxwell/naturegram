@@ -52,6 +52,9 @@ export default function Login() {
                 <input type='text' name='password' data-cy='password' onChange={e => setPassword(e.target.value)} />
             </div>
             <input type='submit' value='Submit' data-cy='submit' onClick={requestLogin} />
+            <div>
+                <p>Don't have an account? <a href='/signup'>Sign up here.</a></p>
+            </div>
         </div>
     );
 }
