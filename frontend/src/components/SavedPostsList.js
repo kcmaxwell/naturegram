@@ -1,8 +1,9 @@
 import { useCallback, useContext, useEffect, useState, useRef } from 'react';
 import { UserContext } from '../context/UserContext';
 import PostThumbnail from './PostThumbnail';
+import Post from './Post';
 
-export default function SavedPostsList({ username }) {
+export default function SavedPostsList({ username, clickPost }) {
 	const [userContext, setUserContext] = useContext(UserContext);
 	const [posts, setPosts] = useState(null);
 
@@ -38,7 +39,7 @@ export default function SavedPostsList({ username }) {
 				) : (
 					<div className="postsContainer" data-cy="savedPosts">
 						{posts.map((post, i) => {
-							return <PostThumbnail key={i} post={post} />;
+							return <Post post={post} key={i}><PostThumbnail clickPost={clickPost} /></Post>;
 						})}
 					</div>
 				))}

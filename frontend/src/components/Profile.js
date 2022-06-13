@@ -8,6 +8,8 @@ import FollowerList from './FollowerList';
 import FollowingList from './FollowingList';
 import PostsList from './PostsList';
 import SavedPostsList from './SavedPostsList';
+import PostPopup from './PostPopup';
+import Post from './Post'
 
 export default function Profile() {
 	const navigate = useNavigate();
@@ -29,6 +31,11 @@ export default function Profile() {
 		popupRef,
 		false
 	);
+	const [isPostPopupActive, setIsPostPopupActive] = useDetectOutsideClick(
+		popupRef,
+		false
+	);
+	const [clickedPost, setClickedPost] = useState(null);
 
 	const getUserInfo = useCallback(() => {
 		fetch(process.env.REACT_APP_BACKEND + '/users/getUser/' + username, {
@@ -56,44 +63,6 @@ export default function Profile() {
 			}
 		});
 	}, [setUserInfo, userContext.token, username, setNotFoundError]);
-
-	const fetchUserDetails = useCallback(() => {
-		fetch(process.env.REACT_APP_BACKEND + '/auth/userInfo', {
-			method: 'GET',
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${userContext.token}`,
-			},
-		}).then(async (res) => {
-			if (res.ok) {
-				const data = await res.json();
-				setUserContext((oldValues) => {
-					return { ...oldValues, details: data };
-				});
-			} else {
-				if (res.status === 401) {
-					// if the token has expired
-					//window.location.reload();
-				} else if (res.status !== 304) {
-					// null the details, unless 304 Not Modified is returned
-					setUserContext((oldValues) => {
-						return { ...oldValues, details: null };
-					});
-				}
-			}
-		});
-	}, [setUserContext, userContext.token]);
-
-	useEffect(() => {
-		if (!userInfo) {
-			getUserInfo();
-		}
-
-		if (!userContext.details) {
-			fetchUserDetails();
-		}
-	}, [userInfo, getUserInfo, userContext.details, fetchUserDetails]);
 
 	const followUser = useCallback(() => {
 		setError('');
@@ -127,18 +96,21 @@ export default function Profile() {
 		setIsSavedPostsVisible(true);
 	};
 
+	const clickPostThumbnail = (post) => {
+		setIsPostPopupActive(true);
+		setClickedPost(post);
+	}
+
 	return notFoundError ? (
 		<>
 			<HTTP404 />
 		</>
-	) : userInfo === null ? (
-		<></>
-	) : !userInfo ? (
+	) : !userContext.details ? (
 		<></>
 	) : (
 		<>
 			{error && <h1>{error}</h1>}
-			<h1>{userInfo.username}'s Profile Page</h1>
+			<h1>{userContext.details.username}'s Profile Page</h1>
 			{userContext.details.username !== username && (
 				<button data-cy="follow" onClick={followUser}>
 					Follow
@@ -165,9 +137,9 @@ export default function Profile() {
 				</button>
 			)}
 
-			{isPostsVisible && <PostsList username={username} />}
+			{isPostsVisible && <PostsList username={username} clickPost={clickPostThumbnail} />}
 
-			{isSavedPostsVisible && <SavedPostsList username={username} />}
+			{isSavedPostsVisible && <SavedPostsList username={username} clickPost={clickPostThumbnail} />}
 
 			{isFollowingActive && (
 				<Popup innerRef={popupRef}>
@@ -177,6 +149,13 @@ export default function Profile() {
 			{isFollowersActive && (
 				<Popup innerRef={popupRef}>
 					<FollowerList username={username} />
+				</Popup>
+			)}
+			{isPostPopupActive && (
+				<Popup innerRef={popupRef}>
+					<Post post={clickedPost}>
+						<PostPopup />
+					</Post>
 				</Popup>
 			)}
 		</>

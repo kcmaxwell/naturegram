@@ -8,8 +8,14 @@ exports.getPost = async function (req, res, next) {
 			if (err) throw err;
 			if (!post) res.sendStatus(404);
 			else {
-				res.status(200);
-				res.send(post);
+				let postWithAuthor = await Post.findById(req.params.postId).populate('author');
+				if (!postWithAuthor) {
+					res.sendStatus(400);
+				} else {
+					post.author = postWithAuthor.author;
+					res.status(200);
+					res.send(post);
+				}
 			}
 		});
 	} else {

@@ -1,17 +1,18 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import HTTP404 from './HTTP404';
 
-export default function Post() {
+export default function Post({post, ...props}) {
 	const { postId } = useParams();
 	const [postDetails, setPostDetails] = useState(null);
 	const [author, setAuthor] = useState('');
 	const [notFoundError, setNotFoundError] = useState(null);
 	const [userContext, setUserContext] = useContext(UserContext);
+	const thisPostId = postId ? postId : post._id;
 
 	const fetchPostDetails = useCallback(() => {
-		fetch(process.env.REACT_APP_BACKEND + '/posts/get/' + postId, {
+		fetch(process.env.REACT_APP_BACKEND + '/posts/get/' + thisPostId, {
 			method: 'GET',
 			credentials: 'include',
 			headers: {
@@ -31,10 +32,10 @@ export default function Post() {
 				}
 			}
 		});
-	}, [setPostDetails, setNotFoundError, postId, userContext.token]);
+	}, [setPostDetails, setNotFoundError, thisPostId, userContext.token]);
 
 	const fetchPostAuthor = useCallback(() => {
-		fetch(process.env.REACT_APP_BACKEND + '/posts/author/' + postId, {
+		fetch(process.env.REACT_APP_BACKEND + '/posts/author/' + thisPostId, {
 			method: 'GET',
 			credentials: 'include',
 			headers: {
@@ -47,7 +48,7 @@ export default function Post() {
 				setAuthor(data);
 			}
 		})
-	}, [setAuthor, postId, userContext.token])
+	}, [setAuthor, thisPostId, userContext.token])
 
 	useEffect(() => {
 		if (!postDetails) {
@@ -57,10 +58,10 @@ export default function Post() {
 		
 	}, [fetchPostDetails, postDetails]);
 
-	useEffect(() => {
-		if (!author)
-			fetchPostAuthor();
-	}, [fetchPostAuthor, author])
+	// useEffect(() => {
+	// 	if (!author)
+	// 		fetchPostAuthor();
+	// }, [fetchPostAuthor, author])
 
 	const likePost = async () => {
 		await fetch(process.env.REACT_APP_BACKEND + '/posts/like/', {
@@ -70,7 +71,7 @@ export default function Post() {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${userContext.token}`,
 			},
-			body: JSON.stringify({ postId }),
+			body: JSON.stringify({ postId: thisPostId }),
 		}).then(async (res) => {
 			if (res.ok) {
 				fetchPostDetails();
@@ -86,7 +87,7 @@ export default function Post() {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${userContext.token}`,
 			},
-			body: JSON.stringify({ postId }),
+			body: JSON.stringify({ postId: thisPostId }),
 		});
 	}
 
@@ -104,16 +105,7 @@ export default function Post() {
 		<></>
 	) : (
 		<>
-			<h1>Post {postDetails.id}</h1>
-			<img src={postDetails.imageUrl} data-cy="image" />
-			{author && <p data-cy="author">Posted by {author.username}</p>}
-			<p data-cy='description'>{postDetails.description}</p>
-			<p data-cy="timestamp">{transformTimestamp()}</p>
-			<button data-cy="likePost" onClick={likePost}>Like</button>
-			<p data-cy="likes">{postDetails.likes.length}</p>
-			<button data-cy='savePost' onClick={savePost}>Save</button>
-
-			<p data-cy='commentList'>This is where comments would go...IF I HAD ANY</p>
+			{React.cloneElement(props.children, {postDetails, transformTimestamp, likePost, savePost})}
 		</>
 	);
 }

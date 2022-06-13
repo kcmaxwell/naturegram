@@ -1,7 +1,9 @@
-export default function PostThumbnail({post}) {
+export default function PostThumbnail({postDetails, clickPost, ...props}) {
     return (
-        <a href={'/post/' + post._id} data-cy='post'>
-        <img src={post.imageUrl} width="500" height="500" />
+        <>
+        <a onClick={() => clickPost(postDetails)} data-cy='post'>
+            <img src={postDetails.imageUrl} width="500" height="500" />
         </a>
+        </>
     )
 }

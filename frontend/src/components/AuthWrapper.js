@@ -58,11 +58,11 @@ const AuthWrapper = () => {
 		});
 	}, [setUserContext, userContext.token]);
 
-	// useEffect(() => {
-	// 	if (!userContext.details) {
-	// 		fetchUserDetails();
-	// 	}
-	// }, [userContext.details, fetchUserDetails]);
+	useEffect(() => {
+		if (userContext.token && !userContext.details) {
+			fetchUserDetails();
+		}
+	}, [userContext, fetchUserDetails]);
 
 	return userContext.token === null ? (
 		<Navigate to="/login" replace state={{ from: location }} />
