@@ -8,10 +8,10 @@ exports.COOKIE_OPTIONS = {
 	secure: !dev,
 	signed: true,
 	maxAge: eval(process.env.REFRESH_TOKEN_EXPIRY) * 1000,
-	sameSite: dev ? 'strict' : 'None',
+	sameSite: dev ? 'strict' : 'lax',
 	httpOnly: true,
 	path: '/',
-	domain: dev ? 'localhost' : process.env.PROD_DOMAIN,
+	//domain: dev ? 'localhost' : process.env.PROD_DOMAIN,
 	//secure: true,
 };
 
