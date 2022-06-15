@@ -69,6 +69,11 @@ exports.signup = async function (req, res, next) {
 	//     );
 	//   }
 
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(400).json({ errors: errors.array() });
+	}
+
 	User.findOne(
 		{
 			username: req.body.username,
@@ -206,13 +211,16 @@ exports.userInfo = async function (req, res, next) {
 };
 
 exports.signS3 = async function (req, res, next) {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(400).json({ errors: errors.array() });
+	}
+
 	const s3 = new aws.S3();
-	//const fileName = req.body.fileName;
 	const fileType = req.query.fileType;
 	const fileKey = req.user.username + '_' + Date.now() + '.' + req.query.fileExt;
 	const s3Params = {
 		Bucket: process.env.S3_BUCKET,
-		//Key: fileName,
 		Key: fileKey,
 		Expires: 60,
 		ContentType: fileType,

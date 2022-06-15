@@ -1,6 +1,10 @@
 const request = require('supertest');
 const app = require('../../app');
 
+exports.seedDB = async () => {
+	return await request(app).post('/api/test/seedDB');
+}
+
 exports.signup = async (user) => {
 	return await request(app).post('/api/auth/signup').send(user);
 };
@@ -8,6 +12,45 @@ exports.signup = async (user) => {
 exports.login = async (user) => {
 	return await request(app).post('/api/auth/login').send(user);
 };
+
+exports.logout = async (loginResponse) => {
+	const { header } = loginResponse;
+
+	return await request(app)
+                .post('/api/auth/logout')
+                .set({
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${loginResponse.body.token}`,
+                })
+                .set('Cookie', [...header['set-cookie']]);
+}
+
+exports.signS3 = async (fileType, fileExt, loginResponse) => {
+	const { header } = loginResponse;
+
+	return await request(app)
+                .get('/api/auth/signS3?' + new URLSearchParams({
+					fileType,
+					fileExt,
+				}))
+                .set({
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${loginResponse.body.token}`,
+                })
+                .set('Cookie', [...header['set-cookie']]);
+}
+
+exports.getCurrentUser = async (loginResponse) => {
+	const { header } = loginResponse;
+
+	return await request(app)
+                .get('/api/auth/userInfo')
+                .set({
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${loginResponse.body.token}`,
+                })
+                .set('Cookie', [...header['set-cookie']])
+}
 
 exports.getUser = async (username, loginResponse) => {
 	const { header } = loginResponse;

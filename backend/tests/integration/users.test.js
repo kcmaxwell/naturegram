@@ -16,6 +16,8 @@ const {
 	savePost,
 } = require('../utils/request');
 
+const { loginTest, signupTest } = require('../utils/common');
+
 describe('Users', () => {
 	let mongoServer;
 	let loginResponse;
@@ -36,10 +38,12 @@ describe('Users', () => {
 		//await mongoose.connect(process.env.MONGODB_TEST, { dbName: 'authTest' })
 		await mongoose.connect(mongoServer.getUri(), { dbName: 'authTest' });
 
-		const firstSignup = await signup(signupUser);
-		const secondSignup = await signup(secondUser);
-		expect(firstSignup.status).toBe(201);
-		expect(secondSignup.status).toBe(201);
+		// const firstSignup = await signup(signupUser);
+		// const secondSignup = await signup(secondUser);
+		// expect(firstSignup.status).toBe(201);
+		// expect(secondSignup.status).toBe(201);
+		await signupTest(signupUser);
+		await signupTest(secondUser);
 
 		// await request(app)
 		//     .post('/auth/signup')
@@ -51,8 +55,9 @@ describe('Users', () => {
 		//     .send(secondUser)
 		//     .expect(201);
 
-		loginResponse = await login(signupUser);
-		expect(loginResponse.status).toBe(200);
+		// loginResponse = await login(signupUser);
+		// expect(loginResponse.status).toBe(200);
+		loginResponse = await loginTest(signupUser);
 	});
 
 	// beforeEach(async() => {

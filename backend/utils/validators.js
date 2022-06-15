@@ -1,12 +1,31 @@
-const { check, validationResult } = require('express-validator');
+const { check, validationResult, param, query } = require('express-validator');
 
 exports.loginValidate = [
-    check('username').isAscii().trim().escape(),
-    check('password').isAscii().trim().escape(),
+	check('username').not().isEmpty().isAscii().trim().escape(),
+	check('password').not().isEmpty().isAscii().trim().escape(),
 ];
 
 exports.signupValidate = [
-    check('username').isAscii().trim().escape(),
-    check('password').isAscii().trim().escape(),
-    check('fullName').isAlphanumeric().trim().escape(),
-]
+	check('username').not().isEmpty().isAscii().trim().escape(),
+	check('password').not().isEmpty().isAscii().trim().escape(),
+	check('fullName').not().isEmpty().isAscii().trim().escape(),
+];
+
+exports.signS3Validate = [
+	query('fileType')
+		.exists()
+		.isString()
+		.not()
+		.isEmpty()
+		.contains('image')
+		.trim()
+		.escape(),
+	query('fileExt')
+		.exists()
+		.isString()
+		.not()
+		.isEmpty()
+		.isIn(['jpg', 'jpeg', 'png', 'gif', 'bmp'])
+		.trim()
+		.escape(),
+];
