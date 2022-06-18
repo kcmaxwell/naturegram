@@ -3,7 +3,7 @@ const app = require('../../app');
 
 exports.seedDB = async () => {
 	return await request(app).post('/api/test/seedDB');
-}
+};
 
 exports.signup = async (user) => {
 	return await request(app).post('/api/auth/signup').send(user);
@@ -17,40 +17,55 @@ exports.logout = async (loginResponse) => {
 	const { header } = loginResponse;
 
 	return await request(app)
-                .post('/api/auth/logout')
-                .set({
-                      "Content-Type": "application/json",
-                      Authorization: `Bearer ${loginResponse.body.token}`,
-                })
-                .set('Cookie', [...header['set-cookie']]);
-}
+		.post('/api/auth/logout')
+		.set({
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${loginResponse.body.token}`,
+		})
+		.set('Cookie', [...header['set-cookie']]);
+};
+
+exports.refreshToken = async (loginResponse) => {
+	const { header } = loginResponse;
+
+	return await request(app)
+		.post('/api/auth/refreshToken')
+		.set({
+			'Content-Type': 'application/json',
+			//Authorization: `Bearer ${loginResponse.body.token}`,
+		})
+		.set('Cookie', [...header['set-cookie']]);
+};
 
 exports.signS3 = async (fileType, fileExt, loginResponse) => {
 	const { header } = loginResponse;
 
 	return await request(app)
-                .get('/api/auth/signS3?' + new URLSearchParams({
+		.get(
+			'/api/auth/signS3?' +
+				new URLSearchParams({
 					fileType,
 					fileExt,
-				}))
-                .set({
-                      "Content-Type": "application/json",
-                      Authorization: `Bearer ${loginResponse.body.token}`,
-                })
-                .set('Cookie', [...header['set-cookie']]);
-}
+				})
+		)
+		.set({
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${loginResponse.body.token}`,
+		})
+		.set('Cookie', [...header['set-cookie']]);
+};
 
 exports.getCurrentUser = async (loginResponse) => {
 	const { header } = loginResponse;
 
 	return await request(app)
-                .get('/api/auth/userInfo')
-                .set({
-                      "Content-Type": "application/json",
-                      Authorization: `Bearer ${loginResponse.body.token}`,
-                })
-                .set('Cookie', [...header['set-cookie']])
-}
+		.get('/api/auth/userInfo')
+		.set({
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${loginResponse.body.token}`,
+		})
+		.set('Cookie', [...header['set-cookie']]);
+};
 
 exports.getUser = async (username, loginResponse) => {
 	const { header } = loginResponse;
@@ -148,7 +163,7 @@ exports.getAuthor = async (postId, loginResponse) => {
 			Authorization: `Bearer ${loginResponse.body.token}`,
 		})
 		.set('Cookie', [...header['set-cookie']]);
-}
+};
 
 exports.postPost = async (post, loginResponse) => {
 	const { header } = loginResponse;
@@ -174,7 +189,7 @@ exports.likePost = async (postId, loginResponse) => {
 		})
 		.set('Cookie', [...header['set-cookie']])
 		.send({ postId });
-}
+};
 
 exports.savePost = async (postId, loginResponse) => {
 	const { header } = loginResponse;

@@ -58,7 +58,7 @@ describe('Posts', () => {
 
 	describe('GET post', () => {
 		let postId;
-		beforeAll(async () => {
+		beforeEach(async () => {
 			let post = {
 				description: 'A post',
 				imageUrl:
@@ -77,6 +77,13 @@ describe('Posts', () => {
 
 		it('should return 404 Not Found if the post id is invalid', async () => {
 			const post = await getPost('notAPost', loginResponse);
+			expect(post.status).toBe(404);
+		});
+
+		it('should return 404 Not Found if there is no post with that id', async () => {
+			await Post.deleteMany();
+
+			const post = await getPost(postId, loginResponse);
 			expect(post.status).toBe(404);
 		});
 	});

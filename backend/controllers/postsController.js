@@ -4,20 +4,15 @@ const mongoose = require('mongoose');
 
 exports.getPost = async function (req, res, next) {
 	if (mongoose.Types.ObjectId.isValid(req.params.postId)) {
-		Post.findById(req.params.postId, async (err, post) => {
-			if (err) throw err;
-			if (!post) res.sendStatus(404);
-			else {
-				let postWithAuthor = await Post.findById(req.params.postId).populate('author');
-				if (!postWithAuthor) {
-					res.sendStatus(400);
-				} else {
-					post.author = postWithAuthor.author;
-					res.status(200);
-					res.send(post);
-				}
-			}
-		});
+		const post = await Post.findById(req.params.postId);
+		if (post) {
+			let postWithAuthor = await Post.findById(req.params.postId).populate('author');
+			post.author = postWithAuthor.author;
+			res.status(200);
+			res.send(post);
+		} else {
+			res.sendStatus(404);
+		}
 	} else {
 		res.sendStatus(404);
 	}

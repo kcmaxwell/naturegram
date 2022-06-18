@@ -4,7 +4,7 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../../app');
 const User = require('../../models/user');
 
-const { seedDB, signup, login, logout, getCurrentUser, signS3 } = require('../utils/request');
+const { seedDB, signup, login, logout, getCurrentUser, signS3, refreshToken } = require('../utils/request');
 const { signupTest, loginTest } = require('../utils/common');
 
 describe('Authentication', () => {
@@ -45,7 +45,7 @@ describe('Authentication', () => {
         });
 
         it('should return 400 Bad Request with invalid input', async() => {
-            const response = await login({username: '', password: 'password'});
+            const response = await login({username: null, password: 'password'});
             expect(response.status).toBe(400);
         });
 
@@ -106,6 +106,53 @@ describe('Authentication', () => {
                 .expect(401);
         });
 
+        it('should return 401 Unauthorized if logging out a user that does not exist', async () => {
+            const loginResponse = await login(seededUser);
+
+            await User.deleteMany();
+
+            const logoutResponse = await logout(loginResponse);
+            expect(logoutResponse.status).toBe(401);
+        })
+    })
+
+    describe('POST refresh token', () => {
+        beforeEach(async() => {
+            await seedDB();
+        })
+
+        it('should return 200 OK and a new refresh token', async () => {
+            const loginResponse = await loginTest(seededUser);
+
+            const refreshResponse = await refreshToken(loginResponse);
+            expect(refreshResponse.status).toBe(200);
+        })
+
+
+        it('should return 401 Unauthorized if not logged in', async () => {
+            const loginResponse = await loginTest(seededUser);
+            const logoutResponse = await logout(loginResponse);
+
+            const refreshResponse = await refreshToken(loginResponse);
+            expect(refreshResponse.status).toBe(401);
+        })
+
+        it('should return 401 Unauthorized if called with no cookie', async () => {
+            const refreshResponse = await request(app)
+            .post('/api/auth/refreshToken')
+            .set({
+                'Content-Type': 'application/json',
+            });
+            expect(refreshResponse.status).toBe(401);
+        })
+
+        it('should return 401 Unauthorized if the cookie does not match a user', async () => {
+            const loginResponse = await loginTest(seededUser);
+            await User.deleteMany();
+
+            const refreshResponse = await refreshToken(loginResponse);
+            expect(refreshResponse.status).toBe(401);
+        })
     })
 
     describe('GET user info', () => {
