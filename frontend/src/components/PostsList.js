@@ -37,11 +37,20 @@ export default function PostsList({ username, clickPost }) {
 						<h1>POSTS IS EMPTY</h1>
 					</>
 				) : (
-					<div className="postsContainer" data-cy="posts">
-						{posts.map((post, i) => {
-							return <Post post={post} key={i}><PostThumbnail clickPost={clickPost} /></Post>;
-						})}
-					</div>
+					<span className="posts-container">
+						<span className="posts-grid" data-cy="posts">
+							{posts.map((post, i) => {
+								return (
+									<Post post={post} key={i}>
+										<PostThumbnail
+											clickPost={clickPost}
+											className="post-thumbnail"
+										/>
+									</Post>
+								);
+							})}
+						</span>
+					</span>
 				))}
 		</>
 	);

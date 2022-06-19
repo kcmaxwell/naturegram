@@ -17,6 +17,6 @@ router.post('/refreshToken', authController.refreshToken);
 
 router.get('/userInfo', verifyUser, authController.userInfo);
 
-router.get('/signS3', signS3Validate, verifyUser, authController.signS3);
+router.get('/signS3', signS3Validate, checkValidation, verifyUser, authController.signS3);
 
 module.exports = router;

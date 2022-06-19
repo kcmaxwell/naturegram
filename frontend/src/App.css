@@ -53,3 +53,24 @@ a.logo, a.logo:link, a.logo:visited, a.logo:hover, a.logo:focus, a.logo:active {
 .popup-contents {
   margin: 50px;
 }
+
+.posts-container {
+  display: flex;
+  justify-content: center;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  max-width: 50vw;
+}
+
+.post-thumbnail-image {
+  object-fit: cover;
+  width: 20vw;
+  height: 20vw;
+
+  max-width: 300px;
+  max-height: 300px;
+}

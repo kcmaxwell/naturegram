@@ -17,15 +17,11 @@ exports.signS3Validate = [
 		.isString()
 		.not()
 		.isEmpty()
-		.contains('image')
-		.trim()
-		.escape(),
+		.contains('image'),
 	query('fileExt')
 		.exists()
 		.isString()
 		.not()
 		.isEmpty()
-		.isIn(['jpg', 'jpeg', 'png', 'gif', 'bmp'])
-		.trim()
-		.escape(),
+		.isIn(['jpg', 'jpeg', 'png', 'gif', 'bmp']),
 ];
