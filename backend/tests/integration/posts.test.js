@@ -107,6 +107,18 @@ describe('Posts', () => {
 			expect(response.status).toBe(200);
 			expect(response.body.username).toStrictEqual(signupUser.username);
 		});
+
+		it('should return 404 Not Found if the post id is invalid', async () => {
+			const post = await getAuthor('notAPost', loginResponse);
+			expect(post.status).toBe(404);
+		});
+
+		it('should return 404 Not Found if there is no post with that id', async () => {
+			await Post.deleteMany();
+
+			const post = await getAuthor(postId, loginResponse);
+			expect(post.status).toBe(404);
+		});
 	});
 
 	describe('POST new post', () => {
@@ -177,5 +189,10 @@ describe('Posts', () => {
 			const foundPost = await Post.findOne({ _id: postId });
 			expect(foundPost.likes.length).toStrictEqual(0);
 		});
+
+		it('should return 400 if there is no post with the given id', async () => {
+			const response = await likePost('notAPost', loginResponse);
+			expect(response.status).toBe(400);
+		})
 	});
 });

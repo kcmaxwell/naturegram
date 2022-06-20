@@ -15,9 +15,6 @@ passport.use(
     //Check against the DB only if necessary.
     //This can be avoided if you don't want to fetch user details in each request.
     User.findOne({ _id: jwt_payload._id }, function (err, user) {
-      if (err) {
-        return done(err, false);
-      }
       if (user) {
         return done(null, user);
       } else {

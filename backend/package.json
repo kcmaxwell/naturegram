@@ -8,10 +8,6 @@
     "test-server": "NODE_ENV=test npm run server",
     "test": "NODE_ENV=jest jest --watchAll --verbose"
   },
-  "jest": {
-    "collectCoverage": true,
-    "collectCoverageFrom": ["./controllers/**", "./models/**", "./middleware/**", "./routes/**", "./strategies/**", "./utils/**", "./*.js"]
-  },
   "dependencies": {
     "aws-sdk": "^2.1146.0",
     "body-parser": "^1.20.0",

@@ -4,6 +4,7 @@
   "description": "An Instagram clone website, created with a React frontend and a Node.js Express backend.",
   "main": "index.js",
   "scripts": {
+    "start": "node backend/bin/www",
     "cypress": "cd frontend && npm run cypress",
     "test-front": "cd frontend && npm start",
     "test-back": "cd backend && npm run test-server",

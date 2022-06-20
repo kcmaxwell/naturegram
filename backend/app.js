@@ -11,7 +11,9 @@ const aws = require('aws-sdk');
 if (process.env.NODE_ENV !== 'production') {
 	require('dotenv').config();
 }
-require('./utils/connectdb');
+const { connectDB } = require('./utils/connectdb');
+connectDB();
+
 require('./strategies/JwtStrategy');
 require('./strategies/LocalStrategy');
 require('./authenticate');
