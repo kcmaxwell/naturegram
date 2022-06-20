@@ -4,6 +4,7 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../../app');
 const User = require('../../models/user');
 const {
+	seedDB,
 	signup,
 	login,
 	getUser,
@@ -21,6 +22,18 @@ const { loginTest, signupTest } = require('../utils/common');
 describe('Users', () => {
 	let mongoServer;
 	let loginResponse;
+	const seededUser = {
+		username: 'user',
+		password: 'pass'
+	}
+	const secondSeededUser = {
+		username: 'user2',
+		password: 'pass'
+	}
+	const noPostsUser = {
+		username: 'following',
+		password: 'pass'
+	}
 	const signupUser = {
 		username: 'username',
 		password: 'password',
@@ -35,39 +48,11 @@ describe('Users', () => {
 	beforeAll(async () => {
 		await mongoose.disconnect();
 		mongoServer = await MongoMemoryServer.create();
-		//await mongoose.connect(process.env.MONGODB_TEST, { dbName: 'authTest' })
 		await mongoose.connect(mongoServer.getUri(), { dbName: 'authTest' });
 
-		// const firstSignup = await signup(signupUser);
-		// const secondSignup = await signup(secondUser);
-		// expect(firstSignup.status).toBe(201);
-		// expect(secondSignup.status).toBe(201);
-		await signupTest(signupUser);
-		await signupTest(secondUser);
-
-		// await request(app)
-		//     .post('/auth/signup')
-		//     .send(signupUser)
-		//     .expect(201);
-
-		//     await request(app)
-		//     .post('/auth/signup')
-		//     .send(secondUser)
-		//     .expect(201);
-
-		// loginResponse = await login(signupUser);
-		// expect(loginResponse.status).toBe(200);
-		loginResponse = await loginTest(signupUser);
+		await seedDB();
+		loginResponse = await loginTest(seededUser);
 	});
-
-	// beforeEach(async() => {
-	//     await User.deleteMany();
-	//     // const collections = await mongoose.connection.db.collections();
-
-	// 	// for (let collection of collections) {
-	// 	// 	await collection.deleteMany();
-	// 	// }
-	// });
 
 	afterAll(async () => {
 		await mongoose.disconnect();
@@ -76,7 +61,7 @@ describe('Users', () => {
 
 	describe('GET user', () => {
 		it('should return the requested user with a 200 OK', async () => {
-			const response = await getUser(signupUser.username, loginResponse);
+			const response = await getUser(seededUser.username, loginResponse);
 			expect(response.status).toBe(200);
 		});
 
@@ -88,81 +73,98 @@ describe('Users', () => {
 
 	describe('GET followers', () => {
 		beforeEach(async () => {
-			await User.findOneAndUpdate(signupUser, { followers: [], following: [] });
-			await User.findOneAndUpdate(secondUser, { followers: [], following: [] });
+			await User.findOneAndUpdate(seededUser, { followers: [], following: [] });
+			await User.findOneAndUpdate(secondSeededUser, { followers: [], following: [] });
 		});
 
 		it('should return 200 OK and the list of followers', async () => {
-			const followRes = await putFollow(secondUser.username, loginResponse);
+			const followRes = await putFollow(secondSeededUser.username, loginResponse);
 			expect(followRes.status).toBe(200);
 
-			const response = await getFollowers(secondUser.username, loginResponse);
+			const response = await getFollowers(secondSeededUser.username, loginResponse);
 			expect(response.status).toBe(200);
 			expect(response.body.length).toStrictEqual(1);
 		});
 
 		it('should return 200 OK and an empty array if there is no followers', async () => {
-			const response = await getFollowers(secondUser.username, loginResponse);
+			const response = await getFollowers(secondSeededUser.username, loginResponse);
 			expect(response.status).toBe(200);
 			expect(response.body).toStrictEqual([]);
 		});
+
+		it('should return 400 for a bad username', async() => {
+			const response = await getFollowers('notAUsername', loginResponse);
+			expect(response.status).toBe(400);
+		})
 	});
 
 	describe('GET following', () => {
 		beforeEach(async () => {
-			await User.findOneAndUpdate(signupUser, { followers: [], following: [] });
-			await User.findOneAndUpdate(secondUser, { followers: [], following: [] });
+			await User.findOneAndUpdate(seededUser, { followers: [], following: [] });
+			await User.findOneAndUpdate(secondSeededUser, { followers: [], following: [] });
 		});
 
 		it('should return 200 OK and the list of followers', async () => {
-			const followRes = await putFollow(secondUser.username, loginResponse);
+			const followRes = await putFollow(secondSeededUser.username, loginResponse);
 			expect(followRes.status).toBe(200);
 
-			const response = await getFollowing(signupUser.username, loginResponse);
+			const response = await getFollowing(seededUser.username, loginResponse);
 			expect(response.status).toBe(200);
 			expect(response.body.length).toStrictEqual(1);
 		});
 
 		it('should return 200 OK and an empty array if there is no followers', async () => {
-			const response = await getFollowing(signupUser.username, loginResponse);
+			const response = await getFollowing(seededUser.username, loginResponse);
 			expect(response.status).toBe(200);
 			expect(response.body).toStrictEqual([]);
 		});
+
+		it('should return 400 for a bad username', async() => {
+			const response = await getFollowing('notAUsername', loginResponse);
+			expect(response.status).toBe(400);
+		})
 	});
 
 	describe('GET posts', () => {
 		beforeEach(async () => {
-			await User.findOneAndUpdate(signupUser, { posts: [] });
+			await User.findOneAndUpdate(noPostsUser, { posts: [] });
 		});
 
 		it('should return 200 OK and the list of posts', async () => {
+			const noPostsLogin = await login(noPostsUser);
+
 			const post = {
 				description: 'Description of the picture',
 				imageUrl:
 					'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
 				timestamp: Date.now(),
 			};
-			const postResponse = await postPost(post, loginResponse);
+			const postResponse = await postPost(post, noPostsLogin);
 			expect(postResponse.status).toBe(201);
 			expect(postResponse.body.id).toBeTruthy();
 
-			const response = await getPosts(signupUser.username, loginResponse);
+			const response = await getPosts(noPostsUser.username, noPostsLogin);
 			expect(response.status).toBe(200);
 			expect(response.body.length).toStrictEqual(1);
 			expect(response.body[0].imageUrl).toStrictEqual(post.imageUrl);
 		});
 
 		it('should return 200 OK and an empty array if there are no posts', async () => {
-			const response = await getPosts(signupUser.username, loginResponse);
+			const response = await getPosts(noPostsUser.username, loginResponse);
 			expect(response.status).toBe(200);
 			expect(response.body).toStrictEqual([]);
 		});
+		
+		it('should return 400 for a bad username', async() => {
+			const response = await getPosts('notAUsername', loginResponse);
+			expect(response.status).toBe(400);
+		})
 	});
 
 	describe('GET saved posts', () => {
 		let postId;
 		beforeAll(async () => {
-			const secondUserLogin = await login(secondUser);
+			const secondUserLogin = await login(secondSeededUser);
 			expect(secondUserLogin.status).toBe(200);
 
 			const post = {
@@ -178,7 +180,7 @@ describe('Users', () => {
 		});
 
 		beforeEach(async () => {
-			await User.findOneAndUpdate(signupUser, { savedPosts: [] });
+			await User.findOneAndUpdate(seededUser, { savedPosts: [] });
 		});
 
 		it('should return 200 OK and the list of saved posts', async () => {
@@ -199,16 +201,16 @@ describe('Users', () => {
 
 	describe('PUT follow', () => {
 		beforeEach(async () => {
-			await User.findOneAndUpdate(signupUser, { followers: [], following: [] });
-			await User.findOneAndUpdate(secondUser, { followers: [], following: [] });
+			await User.findOneAndUpdate(seededUser, { followers: [], following: [] });
+			await User.findOneAndUpdate(secondSeededUser, { followers: [], following: [] });
 		});
 
 		it("should update both user's lists and return 200 OK", async () => {
-			const followRes = await putFollow(secondUser.username, loginResponse);
+			const followRes = await putFollow(secondSeededUser.username, loginResponse);
 			expect(followRes.status).toBe(200);
 
-			const first = await User.findOne({ username: signupUser.username });
-			const second = await User.findOne({ username: secondUser.username });
+			const first = await User.findOne({ username: seededUser.username });
+			const second = await User.findOne({ username: secondSeededUser.username });
 
 			expect(first.following).toContainEqual(second._id);
 			expect(second.followers).toContainEqual(first._id);
@@ -220,11 +222,11 @@ describe('Users', () => {
 		});
 
 		it('should return 409 Conflict if the user already follows the other user', async () => {
-			const followRes = await putFollow(secondUser.username, loginResponse);
+			const followRes = await putFollow(secondSeededUser.username, loginResponse);
 			expect(followRes.status).toBe(200);
 
 			const secondFollowRes = await putFollow(
-				secondUser.username,
+				secondSeededUser.username,
 				loginResponse
 			);
 			expect(secondFollowRes.status).toBe(409);
@@ -234,7 +236,7 @@ describe('Users', () => {
 	describe('PUT save post', () => {
 		let postId;
 		beforeAll(async () => {
-			const secondUserLogin = await login(secondUser);
+			const secondUserLogin = await login(secondSeededUser);
 			expect(secondUserLogin.status).toBe(200);
 
 			const post = {
